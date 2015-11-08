@@ -12,11 +12,23 @@ var tasks = [
     title: 'Test task title with c++ language',
     description: 'Description',
     author: 'Ivan'}];
-/* GET home page. */
-router.get('/', function(req, res, next)
+router.get('/:id', function(req, res, next)
 {
-  res.render('index', { title: 'Golf Programming',
-                        tasks: tasks});
+  for (var t in tasks)
+  {
+    if (tasks[t].id == req.params.id)
+    {
+      res.render('task', { task: tasks[t],
+                           langs: ['c++', 'Java', 'Python'] });
+      break;
+    }
+  }
+});
+
+router.put('/solution', function (req, res, next)
+{
+  res.send(req.body);
+  console.log(req.body);
 });
 
 module.exports = router;

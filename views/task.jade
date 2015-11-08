@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  h3= task.title
+
+  p= task.description
+
+  div(id='langs' style='margin-left: 20px')
+    each lang in langs
+      label.radio
+        input(type="radio", name="langs", value=lang)
+        |  #{lang}
+
+  textarea.form-control(id='code' rows='10')
+    | Hello
+    | Word asd
+
+  button.btn.btn-primary(style='margin-top:20px; margin-bottom:20px;' id='send') Отправить решение
+
+  .alert.alert-success.fade.in()
+      button.close( type="button", data-dismiss="alert" ) ×
+      strong Решение отправлено!
+      |   Стартовал процесс компиляции.
+
+  #myalerts
+
+  script(type='text/javascript').
+    $(document).ready(function() {
+
+      $('.alert').hide();
+      $('#send').click(function() {
+        var code = $('#code').val() || 'null code';
+        var lang = $('input[name=langs]:checked').val() || 'c++';
+        var solution = { lang: lang,
+                         code: code};
+        $.ajax({
+          type: 'PUT',
+          url: '/task/solution',
+          data: JSON.stringify({ task_id: #{task.id}, solution: solution }),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+        }).done(function(result) {
+           $('.alert').show();
+          console.log(result);
+        });
+      });
+    });
