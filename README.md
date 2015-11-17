@@ -24,6 +24,7 @@ If you would like to download the code and try it for yourself:
 ###Development:
 
 1. Connect for cloud: ssh -i aws\ ec2\ access/AlexTsiganov.pem ubuntu@54.208.42.199
+new `ssh -i aws\ ec2\ access/GolfProgramming.pem ubuntu@54.173.174.148`
   user: ubuntu
 2. Run NodeJS web server with npm: npm install | npm start (TODO://replace with script)
   before: 'export NODE_ENV=development'

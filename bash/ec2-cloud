@@ -1,0 +1,19 @@
+#!/bin/bash
+
+connect-ec2 ()
+{
+  echo "Connecting to $host_name - $pem"
+  ssh -i aws\ ec2\ access/$pem.pem ubuntu@$host_name
+}
+
+if [[ $1 ]]; then
+  host_name=54.208.42.199
+  pem=AlexTsiganov
+else
+  host_name=54.173.174.148
+  pem=GolfProgramming
+fi
+
+connect-ec2 host_name pem
+exit 0
+#
