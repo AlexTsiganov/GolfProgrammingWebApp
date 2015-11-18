@@ -29,6 +29,11 @@ app.use('/users', users);
 app.use('/login', login);
 app.use('/task', task);
 
+app.use('/git',function(req, res, next) {
+  console.log(req.body);
+  
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
