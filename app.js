@@ -33,9 +33,10 @@ app.use('/task', task);
 
 app.use('/git',function(req, res, next) {
   console.log(req.body);
-
-  execFile('./github-hook', function(error, stdout, stderr) {
-                    res.sendStatus(200);
+  res.sendStatus(200);
+  execFile("./github-hook", function(error, stdout, stderr) {
+                    //
+                    res.send(stdout);
                     console.log('error', error);
                     console.log('stdout', stdout);
                     console.log('stderr', stderr);
