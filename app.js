@@ -34,7 +34,7 @@ app.use('/task', task);
 app.use('/git',function(req, res, next) {
   console.log(req.body);
 
-  execFile('../bash/github-hook', function(error, stdout, stderr) {
+  execFile('/github-hook', function(error, stdout, stderr) {
                     res.sendStatus(200);
                     console.log( 'exec complete' );
             });
