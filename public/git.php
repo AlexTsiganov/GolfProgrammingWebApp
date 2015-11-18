@@ -1,6 +1,8 @@
 <?php
 
-// Clone fresh repo from github using desired local repo name and checkout the desired branch
-echo shell_exec("cd {$LOCAL_ROOT} && git pull && nodejs bin/www");
+$DESIRED_BRANCH     = "deploy";
+
+echo shell_exec("forever stopall");
+echo shell_exec("git pull && git checkout {$BRANCH} && forever start bin/www");
 
 die("done " . mktime());
