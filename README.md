@@ -57,3 +57,4 @@ echo export NODE_ENV=production >> ~/.bash_profile
 sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
 
 1
+2
