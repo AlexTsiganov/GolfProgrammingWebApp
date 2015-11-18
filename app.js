@@ -36,6 +36,9 @@ app.use('/git',function(req, res, next) {
 
   execFile('/github-hook', function(error, stdout, stderr) {
                     res.sendStatus(200);
+                    console.log('error', error);
+                    console.log('stdout', stdout);
+                    console.log('stderr', stderr);
                     console.log( 'exec complete' );
             });
 
