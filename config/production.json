@@ -1,5 +1,4 @@
 {
-    "port" : 8080,
     "dbConfig": {
       "host"     : "localhost",
       "user"     : "golf",
