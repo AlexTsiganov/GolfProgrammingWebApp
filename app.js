@@ -31,7 +31,7 @@ app.use('/task', task);
 
 app.use('/git',function(req, res, next) {
   console.log(req.body);
-  
+  res.sendStatus(200);
 });
 
 // catch 404 and forward to error handler
