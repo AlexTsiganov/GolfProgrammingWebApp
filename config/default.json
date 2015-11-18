@@ -1,0 +1,9 @@
+{
+    "port": 3000,
+    "dbConfig": {
+      "host"     : "localhost",
+      "user"     : "golf",
+      "password" : "golf",
+      "database" : "golf_programming"
+    }
+}

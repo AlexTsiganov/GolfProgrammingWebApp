@@ -2,7 +2,7 @@
   "name": "golf-programming-web-app",
   "version": "1.0.0",
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "supervisor start bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,11 +13,12 @@
   "dependencies": {
     "body-parser": "~1.13.2",
     "bootbox": "^4.4.0",
+    "config": "^1.17.1",
     "cookie-parser": "~1.3.5",
-    "debug": "~2.2.0",
     "express": "~4.13.1",
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
+    "mysql": "^2.9.0",
     "serve-favicon": "~2.3.0",
     "supervisor": "^0.9.1"
   }

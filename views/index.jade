@@ -11,5 +11,5 @@ block content
      each task in tasks
        tr
         td #{task.id}
-        td: a(href=task.href) #{task.title}
+        td: a(href='/task/'+task.id) #{task.title}
         td #{task.author}

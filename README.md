@@ -31,6 +31,17 @@ new `ssh -i aws\ ec2\ access/GolfProgramming.pem ubuntu@54.173.174.148`
 3. Run web server on cloud: sudo PORT=80 DEBUG=golf-apm start (TODO://replace with script)
   Running web server in the background:
 
+***
+
+###Database MySql:
+
+1. Connect `mysql -u root -p` pass: 123123
+  user: golf pass: golf
+  create database golf_programming;
+  grant all on golf_programming.* to 'golf' identified by 'golf';
+
+***
+
 TODO:// npm install -> https://github.com/foreverjs/forever
             debug   -> https://github.com/visionmedia/debug
 
@@ -39,3 +50,5 @@ sudo PORT=80 DEBUG=golf-app:* npm start
 sudo PORT=80 nodejs bin/www
 
 nohup nodejs bin/www > output.log &
+
+export NODE_ENV=production
