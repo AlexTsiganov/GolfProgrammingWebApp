@@ -10,6 +10,8 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var task = require('./routes/task');
 
+var execFile = require('child_process').execFile;
+
 var app = express();
 
 // view engine setup
@@ -31,7 +33,12 @@ app.use('/task', task);
 
 app.use('/git',function(req, res, next) {
   console.log(req.body);
-  res.sendStatus(200);
+
+  execFile('../bash/github-hook', function(error, stdout, stderr) {
+                    res.sendStatus(200);
+                    console.log( 'exec complete' );
+            });
+
 });
 
 // catch 404 and forward to error handler
