@@ -52,3 +52,4 @@ sudo PORT=80 nodejs bin/www
 nohup nodejs bin/www > output.log &
 
 export NODE_ENV=production
+echo export NODE_ENV=production >> ~/.bash_profile
