@@ -13,7 +13,7 @@ connection.connect(function(err)
  console.log('MySQL connected as id ' + connection.threadId);
 });
 
-exports.getAllTasks = function(cb) {
+var getAllTasks = function(cb) {
   connection.query("SELECT * FROM tasks", function(err, rows, fields)
   {
     console.log('Rows ', rows);
@@ -21,9 +21,20 @@ exports.getAllTasks = function(cb) {
   });
 };
 
-exports.getTask = function(id, cb) {
+var getTestByTaskID = function(taskID)
+{
+  // TODO: create sql table TESTS
+  return [ {'input': '123', 'output': '456'}, {'input': '123', 'output': '456'}];
+};
+
+var getTask = function(id, cb) {
   connection.query("SELECT * FROM tasks WHERE id = ?", id, function(err, rows, fields)
   {
+    rows[0]['tests'] = getTestByTaskID(id);
     cb(rows[0], err);
   });
 };
+
+exports.getAllTasks = getAllTasks;
+exports.getTask = getTask;
+exports.getTestByTaskID = getTestByTaskID;
