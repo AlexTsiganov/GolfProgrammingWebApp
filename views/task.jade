@@ -5,6 +5,17 @@ block content
 
   p= task.description
 
+  p Исходное задание
+  table.table-bordered
+   thead: tr
+     th Входные данные
+     th Выходные данные
+   tbody
+     each test in task.tests
+       tr
+        td #{test.input}
+        td #{test.output}
+
   div(id='langs' style='margin-left: 20px')
     each lang in langs
       label.radio
