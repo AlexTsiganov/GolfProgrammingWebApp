@@ -1,4 +1,4 @@
-###Hello new NodeJS Golf Programming v.1.0.0
+###Hello deploy NodeJS Golf Programming v.1.0.0
 
 #[Golf programming](http://ec2-54-208-42-199.compute-1.amazonaws.com)
 
