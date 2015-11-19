@@ -1,10 +1,10 @@
 ###Hello deploy NodeJS Golf Programming v.1.0.0
 
-#[Golf programming](http://ec2-54-208-42-199.compute-1.amazonaws.com)
+#[Golf programming](http://ec2-54-173-174-148.compute-1.amazonaws.com)
 
 Amazon Web service EC2 ubuntu
-  Public DNS: [ec2-54-208-42-199.compute-1.amazonaws.com](http://ec2-54-208-42-199.compute-1.amazonaws.com)
-  Public IP: [54.208.42.199](54.208.42.199)
+  Public DNS: [ec2-54-173-174-148.compute-1.amazonaws.com](http://ec2-54-173-174-148.compute-1.amazonaws.com)
+  Public IP: [54.173.174.148](http://54.173.174.148/)
 
   Active ports: http -> 80, 9000
 
@@ -55,6 +55,3 @@ export NODE_ENV=production
 echo export NODE_ENV=production >> ~/.bash_profile
 
 sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
-
-1
-2
