@@ -23,6 +23,15 @@ If you would like to download the code and try it for yourself:
 
 ***
 
+###Building project on cloud:
+
+1. Switch to local **deploy** branch: `git checkout deploy`
+2. Commit your last changes to deploy branch or **merge with master**
+3. Push deploy branch to github: `git push origin deploy`
+   After that web server restart and download lash commits from *deploy* branch via github hook
+
+***
+
 ###Connect to AWS EC2 cloud:
 
 1. Copy GolfProgramming.pem to folder `ws ec2 access`
@@ -39,10 +48,11 @@ If you would like to download the code and try it for yourself:
 
 **Be very careful with the editing database; errors can lead to data loss**
 
-1. Connect `mysql -u golf -p` pass: *golf*
+1. Connect `mysql -u golf -p` *password: golf*
 2. Select database: `use golf_programming`
 3. Show tables: `show tables;`
 4. All tables duplicate into `Database/tables.txt`
+
 ***
 
 ###Development:
