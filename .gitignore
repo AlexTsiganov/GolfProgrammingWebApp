@@ -1,3 +1,4 @@
 node_modules
-aws\ ec2\ access/*
+*.pem
+*.alex
 database_local
