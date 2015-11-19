@@ -13,6 +13,7 @@
   "dependencies": {
     "body-parser": "~1.13.2",
     "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.5",
     "config": "^1.17.1",
     "cookie-parser": "~1.3.5",
     "express": "~4.13.1",

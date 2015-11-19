@@ -1,58 +1,107 @@
 extends layout
 
 block content
-  h3= task.title
+  #container
+    if task
+    h2= task.title
+    blockquote
+      p= task.description ? task.description : "у задания нет описания :("
+      footer= task.authorName ? task.authorName : "Автор спрятан"
 
-  p= task.description
+    .panel.panel-info
+      .panel-heading
+        a(data-toggle="collapse" href="#collapse1") Тесты
+      .panel-collapse.collapse.in(id="collapse1")
+        .panel-body
+            table.table.table-striped
+             thead: tr
+               th №
+               th Входные данные
+               th Результат
+             tbody
+               each test, i in task.tests
+                 tr
+                  td= i+1
+                  td= test.input
+                  td= test.output
 
-  p Исходное задание
-  table.table-bordered
-   thead: tr
-     th Входные данные
-     th Выходные данные
-   tbody
-     each test in task.tests
-       tr
-        td #{test.input}
-        td #{test.output}
+    .panel.panel-warning
+      .panel-heading Выбор языка прогарммирования
+      .panel-body
+          each lang in langs
+            .radio
+                label
+                  input(type="radio", name="langs", value=lang)
+                  |  #{lang.lang}
 
-  div(id='langs' style='margin-left: 20px')
-    each lang in langs
-      label.radio
-        input(type="radio", name="langs", value=lang)
-        |  #{lang}
+    textarea.form-control(id='code' placeholder="Ваш код ..."  rows='10')
 
-  textarea.form-control(id='code' rows='10')
-    | Hello
-    | Word asd
+    button.btn.btn-primary(style='margin-top:20px; margin-bottom:20px; box-shadow: 1px 2px 5px #000000;' id='send') Отправить решение
 
-  button.btn.btn-primary(style='margin-top:20px; margin-bottom:20px;' id='send') Отправить решение
+    .modal.fade(id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+      .modal-dialog.wide-modal
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h4.myModalLabel.modal-title
+            | #{title}
+          .modal-body
+              #container(style="width:90%; height:400px;")
+          .modal-footer
+            button.btn.btn-primary(type='button', data-dismiss='modal') Close
 
-  .alert.alert-success.fade.in()
-      button.close( type="button", data-dismiss="alert" ) ×
-      strong Решение отправлено!
-      |   Стартовал процесс компиляции.
-
-  #myalerts
-
-  script(type='text/javascript').
-    $(document).ready(function() {
-
-      $('.alert').hide();
+  script.
+    $(document).ready(function()
+    {
+      $("input[name=langs][value='#{langs[0]}']").prop('checked', true);
       $('#send').click(function() {
-        var code = $('#code').val() || 'null code';
-        var lang = $('input[name=langs]:checked').val() || 'c++';
-        var solution = { lang: lang,
-                         code: code};
-        $.ajax({
-          type: 'PUT',
-          url: '/task/solution',
-          data: JSON.stringify({ task_id: #{task.id}, solution: solution }),
-          contentType: "application/json; charset=utf-8",
-          dataType: "json",
-        }).done(function(result) {
-           $('.alert').show();
-          console.log(result);
-        });
+        var code = $('#code').val();
+        var lang = $('input[name=langs]:checked').val();
+        if (code && lang)
+        {
+          HoldOn.open({"message": "Отправка решение"});
+          var solution = { lang: lang,
+                           code: code};
+          $.ajax({
+            type: 'PUT',
+            url: '/task/solution',
+            data: JSON.stringify({ task_id: #{task.id}, solution: solution }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+          }).done(function(result) {
+            HoldOn.close();
+            if (result.status == 'success')
+            {
+              var _title = "Решение успешно получено";
+              var _message = "message";
+              var _type = BootstrapDialog.TYPE_SUCCESS;
+            }
+            else {
+              var _title = "Ошибка компиляции или теста";
+              var _message = "message";
+              var _type = BootstrapDialog.TYPE_DANGER;
+            }
+            var successDialog = BootstrapDialog.show({
+              type: _type,
+              title: _title,
+              message: _message,
+              action: setTimeout( function(){
+                          successDialog.close();
+                      }, 5000)
+                  });
+
+            console.log(result);
+          });
+        }
+        else {
+          var errorDialog = BootstrapDialog.show({
+            type: BootstrapDialog.TYPE_WARNING,
+            title: "Ошибка",
+            message: "Введите решение",
+            action: setTimeout( function(){
+                        errorDialog.close();
+                    }, 2000)
+                });
+        }
       });
     });

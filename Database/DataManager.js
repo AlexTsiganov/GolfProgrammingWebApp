@@ -21,6 +21,10 @@ var getAllTasks = function(cb) {
   });
 };
 
+var getProgramLangs = function(argument) {
+  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}];
+};
+
 var getTestByTaskID = function(taskID)
 {
   // TODO: create sql table TESTS
@@ -32,9 +36,11 @@ var getTask = function(id, cb) {
   {
     rows[0]['tests'] = getTestByTaskID(id);
     cb(rows[0], err);
+    return rows[0];
   });
 };
 
+exports.getProgramLangs = getProgramLangs;
 exports.getAllTasks = getAllTasks;
 exports.getTask = getTask;
 exports.getTestByTaskID = getTestByTaskID;
