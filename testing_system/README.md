@@ -13,9 +13,10 @@ Arguments:
 Returns:
 
 nothing to return, but generate events with information about test process:
-1. `runtimeError`
-2. `testFailed`
-3. `success`
+
+1. `runtimeError`.
+2. `testFailed`.
+3. `success`.
 
 ***
 
