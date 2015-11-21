@@ -1,18 +1,25 @@
-###Instructions for testing system:
+###Here is the testing system for ProgrammingGolf project:
+
+File `testing.js` contains description of class TestSystem with main function `testing(solution, filename)`.
+
+File `index.js` contains example of using function `testing(solution, filename)`.
+
+File `database.js` contains "virtual" database (temporal file).
+
+***
 
 Main function:
 
 `testing(solution, filename)`
-File `index.js` contains example of using this function with error handling.
 
 Arguments:
 
-`solution` - ID of user's solution in database (for example, `1`);
-`filename` - full name of the file with user's code (for example, `/home/user/myfolder/mycode.cpp`).
+1. `solution` - ID of user's solution in database (for example, `1`).
+2. `filename` - full name of the file with user's code (for example, `/home/user/myfolder/mycode.cpp`).
 
 Returns:
 
-nothing to return, but generate events with information about test process:
+Nothing to return, but generate events with information about test process:
 
 1. `runtimeError`.
 2. `testFailed`.
