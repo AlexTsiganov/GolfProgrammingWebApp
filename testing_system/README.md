@@ -3,6 +3,7 @@
 Main function:
 
 `testing(solution, filename)`
+File `index.js` contains example of using this function with error handling.
 
 Arguments:
 
@@ -11,7 +12,10 @@ Arguments:
 
 Returns:
 
-nothing to return for now, but update `status` variable with information about test process (for example, `testing`, `Test #1 passed`, `Test #3 failed`).
+nothing to return, but generate events with information about test process:
+1. `runtimeError`
+2. `testFailed`
+3. `success`
 
 ***
 
