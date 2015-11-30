@@ -31,7 +31,7 @@ block content
           each lang in langs
             .radio
                 label
-                  input(type="radio", name="langs", value=lang)
+                  input(type="radio", name="langs", value=lang.lang)
                   |  #{lang.lang}
 
     textarea.form-control(id='code' placeholder="Ваш код ..."  rows='10')
@@ -50,17 +50,18 @@ block content
           .modal-footer
             button.btn.btn-primary(type='button', data-dismiss='modal') Close
 
-  script.
+  script(type='text/javascript').
     $(document).ready(function()
     {
-      $("input[name=langs][value='#{langs[0]}']").prop('checked', true);
+      $("input[name=langs][value='#{langs[3].lang}']").prop('checked', true);
       $('#send').click(function() {
         var code = $('#code').val();
-        var lang = $('input[name=langs]:checked').val();
-        if (code && lang)
+        var _lang = $('input[name=langs]:checked').val();
+        console.log('lang: '+ _lang);
+        if (code && _lang)
         {
           HoldOn.open({"message": "Отправка решение"});
-          var solution = { lang: lang,
+          var solution = { lang: _lang,
                            code: code};
           $.ajax({
             type: 'PUT',

@@ -20,6 +20,7 @@ router.put('/solution', function (req, res, next)
   var solution = req.body.solution;
   dataManager.getTask(req.body.taskID, function(task, error)
   {
+
     parseSolution(task, solution, function (response) {
       res.send(response);
     })
@@ -34,9 +35,10 @@ function parseSolution(task, solution, cb)
   response.status = 'success';
   response.message = '';
   console.log(solution.lang.lang);
-  if (solution.lang == 'bash')
+  if (solution.lang != 'bash')
   {
     response.status = 'error';
+    response.message = 'Используй bash';
     cb(response);
     return;
   }
@@ -65,7 +67,7 @@ function checkTests(task, solution, response, cb, indexTest)
       console.log(stderr);
       console.log('out='+test.out.toString());
       var ver_status = parseInt(stdout,10) == test.out;
-      response.status = (ver_status && response.status == 'error')?'success':'error';
+      response.status = (ver_status && response.status == 'success')?'success':'error';
       if (ver_status)
       {
           response.message += 'Test № '+indexTest+' - success\n';
