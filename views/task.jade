@@ -22,8 +22,8 @@ block content
                each test, i in task.tests
                  tr
                   td= i+1
-                  td= test.input
-                  td= test.output
+                  td= test.in
+                  td= test.out
 
     .panel.panel-info
       .panel-heading Выбор языка прогарммирования
@@ -65,7 +65,7 @@ block content
           $.ajax({
             type: 'PUT',
             url: '/task/solution',
-            data: JSON.stringify({ task_id: #{task.id}, solution: solution }),
+            data: JSON.stringify({ taskID: #{task.id}, solution: solution }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
           }).done(function(result) {

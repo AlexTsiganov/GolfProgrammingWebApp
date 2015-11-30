@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var dataManager = require('../Database/DataManager');
+var spawn = require('child_process').spawn;
+var child_process = require('child_process');
 
 router.get('/:id', function(req, res, next)
 {
@@ -14,16 +16,53 @@ router.get('/:id', function(req, res, next)
 router.put('/solution', function (req, res, next)
 {
   console.log(req.body);
-  var taskID = req.body.task_id;
   var solution = req.body.solution;
-  res.send(parseSolution(taskID, solution));
+  dataManager.getTask(req.body.taskID, function(task, error)
+  {
+    res.send(parseSolution(task, solution));
+  });
 });
 
-function parseSolution(taskID, solution)
+function parseSolution(task, solution)
 {
   // TODO: Вот тут должен происходить процесс компиляции, тестирования и формироваться результат
   var response = new Object();
-  if (taskID == 1)
+  child_process.exec('$PATH', function (err, stdout, stderr) {
+      console.log(stdout);
+  });
+  child_process.exec('echo '+solution.code+' > Alex\\ test\\ task/test', function (err, stdout, stderr) {
+      console.log(stdout);
+  });
+
+  child_process.exec(solution.code + ' -3' + ' -4', function (err, stdout, stderr) {
+      console.log(stdout);
+      console.log(stderr);
+  });
+
+  // child_process.exec('./Alex\\ test\\ task/test ' + '-asdss', function (err, stdout, stderr) {
+  //     console.log(stdout);
+  //     console.log(stderr);
+  // });
+
+
+  // var code = "echo 'alexx'";
+  // var child = spawn("ps", ['--help']);
+  //
+  // child.stdout.on('data',
+  //     function (data) {
+  //         console.log('tail output: ' + data);
+  //     }
+  // );
+  //
+  // child.stderr.on('data',
+  //     function (data) {
+  //         console.log('err data: ' + data);
+  //     }
+  // );
+
+console.log("good");
+
+  if (task.id == 1)
   {
       response.status = 'success';
   }
@@ -32,5 +71,7 @@ function parseSolution(taskID, solution)
   }
   return response;
 }
+
+
 
 module.exports = router;

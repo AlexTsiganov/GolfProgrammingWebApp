@@ -28,7 +28,7 @@ var getProgramLangs = function(argument) {
 var getTestByTaskID = function(taskID)
 {
   // TODO: create sql table TESTS
-  return [ {'input': '123', 'output': '456'}, {'input': '123', 'output': '456'}];
+  return [ {'in': '1 2', 'out': '3'}, {'in': '2 3', 'out': '5'}];
 };
 
 var getTask = function(id, cb) {
@@ -36,7 +36,6 @@ var getTask = function(id, cb) {
   {
     rows[0]['tests'] = getTestByTaskID(id);
     cb(rows[0], err);
-    return rows[0];
   });
 };
 
