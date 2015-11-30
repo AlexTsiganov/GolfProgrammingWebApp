@@ -22,7 +22,7 @@ var getAllTasks = function(cb) {
 };
 
 var getProgramLangs = function(argument) {
-  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}];
+  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}, {'lang': 'bash'}];
 };
 
 var getTestByTaskID = function(taskID)

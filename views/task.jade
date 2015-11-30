@@ -11,7 +11,7 @@ block content
     .panel.panel-info
       .panel-heading
         a(data-toggle="collapse" href="#collapse1") Тесты
-      .panel-collapse.collapse(id="collapse1")
+      .panel-collapse(id="collapse1")
         .panel-body
             table.table.table-striped
              thead: tr
@@ -72,22 +72,20 @@ block content
             HoldOn.close();
             if (result.status == 'success')
             {
-              var _title = "Решение успешно получено";
-              var _message = "message";
+              var _title = "Успех";
               var _type = BootstrapDialog.TYPE_SUCCESS;
             }
             else {
-              var _title = "Ошибка компиляции или теста";
-              var _message = "message";
+              var _title = "Ошибка";
               var _type = BootstrapDialog.TYPE_DANGER;
             }
             var successDialog = BootstrapDialog.show({
               type: _type,
               title: _title,
-              message: _message,
+              message: result.message,
               action: setTimeout( function(){
                           successDialog.close();
-                      }, 5000)
+                      }, 50000)
                   });
 
             console.log(result);
