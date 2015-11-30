@@ -27,22 +27,27 @@ function parseSolution(task, solution)
 {
   // TODO: Вот тут должен происходить процесс компиляции, тестирования и формироваться результат
   var response = new Object();
-  child_process.exec('$PATH', function (err, stdout, stderr) {
+  child_process.exec('echo $PATH', function (err, stdout, stderr) {
       console.log(stdout);
   });
-  child_process.exec('echo '+solution.code+' > Alex\\ test\\ task/test', function (err, stdout, stderr) {
+  child_process.exec("echo '"+solution.code+"' > Alex\\ test\\ task/test", function (err, stdout, stderr) {
       console.log(stdout);
   });
 
-  child_process.exec(solution.code + ' -3' + ' -4', function (err, stdout, stderr) {
-      console.log(stdout);
-      console.log(stderr);
-  });
 
-  // child_process.exec('./Alex\\ test\\ task/test ' + '-asdss', function (err, stdout, stderr) {
-  //     console.log(stdout);
-  //     console.log(stderr);
-  // });
+   child_process.exec('./Alex\\ test\\ task/test ' + '-asdss', function (err, stdout, stderr) {
+       console.log(stdout);
+       console.log(stderr);
+
+ if (stderr)
+  {
+      response.status = 'error';
+  }
+  else {
+    response.status = 'success';
+  }
+  return response;
+   });
 
 
   // var code = "echo 'alexx'";
@@ -62,14 +67,6 @@ function parseSolution(task, solution)
 
 console.log("good");
 
-  if (task.id == 1)
-  {
-      response.status = 'success';
-  }
-  else {
-    response.status = 'error';
-  }
-  return response;
 }
 
 
