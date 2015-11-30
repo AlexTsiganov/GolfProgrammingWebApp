@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var dataManager = require('../Database/DataManager');
-var spawn = require('child_process').spawn;
-var child_process = require('child_process');
+var exec = require('child_process').exec;
+var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 router.get('/:id', function(req, res, next)
 {
@@ -19,56 +20,74 @@ router.put('/solution', function (req, res, next)
   var solution = req.body.solution;
   dataManager.getTask(req.body.taskID, function(task, error)
   {
-    res.send(parseSolution(task, solution));
+
+    parseSolution(task, solution, function (response) {
+      res.send(response);
+    })
+
   });
 });
 
-function parseSolution(task, solution)
+function parseSolution(task, solution, cb)
 {
   // TODO: Вот тут должен происходить процесс компиляции, тестирования и формироваться результат
   var response = new Object();
-  child_process.exec('echo $PATH', function (err, stdout, stderr) {
-      console.log(stdout);
-  });
-  child_process.exec("echo '"+solution.code+"' > Alex\\ test\\ task/test", function (err, stdout, stderr) {
-      console.log(stdout);
-  });
-
-
-   child_process.exec('./Alex\\ test\\ task/test ' + '-asdss', function (err, stdout, stderr) {
-       console.log(stdout);
-       console.log(stderr);
-
- if (stderr)
+  response.status = 'success';
+  response.message = '';
+  console.log(solution.lang.lang);
+  if (solution.lang != 'bash')
   {
-      response.status = 'error';
+    response.status = 'error';
+    response.message = 'Используй bash';
+    cb(response);
+    return;
   }
-  else {
-    response.status = 'success';
-  }
-  return response;
-   });
+  mkdirp("tmp/tasks/"+task.id, function(err) {
 
+    fs.writeFile('tmp/tasks/'+task.id+'/solution', solution.code, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+        fs.chmodSync('./tmp/tasks/'+task.id+'/solution', 0755);
+        console.log("The file was saved!");
 
-  // var code = "echo 'alexx'";
-  // var child = spawn("ps", ['--help']);
-  //
-  // child.stdout.on('data',
-  //     function (data) {
-  //         console.log('tail output: ' + data);
-  //     }
-  // );
-  //
-  // child.stderr.on('data',
-  //     function (data) {
-  //         console.log('err data: ' + data);
-  //     }
-  // );
+        checkTests(task, solution, response, cb, 0);
 
-console.log("good");
+    });
 
+});
 }
 
-
+function checkTests(task, solution, response, cb, indexTest)
+{
+  var test = task.tests[indexTest];
+  console.log(test);
+  exec('./tmp/tasks/'+task.id+'/solution '+test.in, function (err, stdout, stderr) {
+      console.log('stdout='+stdout.toString());
+      console.log(stderr);
+      console.log('out='+test.out.toString());
+      var ver_status = parseInt(stdout,10) == test.out;
+      response.status = (ver_status && response.status == 'success')?'success':'error';
+      if (ver_status)
+      {
+          response.message += 'Test № '+indexTest+' - success\n';
+          response.message += 'out: '+stdout+'\n';
+      }
+      else {
+          response.message += 'Test № '+indexTest+' - faild\n';
+          response.message += 'out: '+(stdout?stdout:'\n');
+          response.message += 'error: '+stderr+'\n';
+      }
+      indexTest++;
+      if (indexTest == task.tests.length)
+      {
+        cb(response);
+      }
+      else {
+        response.message+='\n';
+        checkTests(task, solution, response, cb, indexTest);
+      }
+  });
+};
 
 module.exports = router;

@@ -22,7 +22,7 @@ var getAllTasks = function(cb) {
 };
 
 var getProgramLangs = function(argument) {
-  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}];
+  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}, {'lang': 'bash'}];
 };
 
 var getTestByTaskID = function(taskID)
@@ -35,6 +35,7 @@ var getTask = function(id, cb) {
   connection.query("SELECT * FROM tasks WHERE id = ?", id, function(err, rows, fields)
   {
     rows[0]['tests'] = getTestByTaskID(id);
+    rows[0].authorName = rows[0].author;
     cb(rows[0], err);
   });
 };
