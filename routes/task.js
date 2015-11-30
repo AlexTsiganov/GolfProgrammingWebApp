@@ -34,7 +34,6 @@ function parseSolution(task, solution, cb)
   var response = new Object();
   response.status = 'success';
   response.message = '';
-  console.log(solution.lang.lang);
   if (solution.lang != 'bash')
   {
     response.status = 'error';
@@ -45,7 +44,9 @@ function parseSolution(task, solution, cb)
   mkdirp("tmp/tasks/"+task.id, function(err) {
 
     fs.writeFile('tmp/tasks/'+task.id+'/solution', solution.code, function(err) {
-        if(err) {
+        if(err)
+        {
+            cb(response);
             return console.log(err);
         }
         fs.chmodSync('./tmp/tasks/'+task.id+'/solution', 0755);
