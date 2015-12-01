@@ -25,39 +25,33 @@ var test_system = new TestSystem();
 /**
  * Main function for testing client's code.
  * This function starts the test - calls the function writeInput().
- * @param {type} solution - solution ID from database.
  * @param {type} filename - full name (with path) of the file with code.
+ * @param {type} langs - data from table "PROGRAM_LANGUAGES".
+ * @param {type} tasks - data from table "TASKS".
+ * @param {type} tests - data from table "TESTS".
+ * @param {type} solutions - data from table "SOLUTIONS".
  * @returns {undefined}
  */
-TestSystem.prototype.testing = function testing(solution, filename) {
+TestSystem.prototype.testing = function testing(filename, langs, tasks, tests, 
+        solutions) {
     
-    // save solution ID
-    this.solution = solution;
+    // take solution
+    this.solution = solutions;
     
-    // save filename
+    // take filename
     this.code = filename;
     
-    // select from DB
-    this.tests = [
-        {
-            input: db.tests[0].input_data,
-            output: db.tests[0].output_data
-        },
-        {
-            input: db.tests[1].input_data,
-            output: db.tests[1].output_data
-        },
-        {
-            input: db.tests[2].input_data,
-            output: db.tests[2].output_data
-        }
-    ];
-    this.exec_command = db.langs[0].exec_command;
-    this.timelimit = db.tasks[0].timelimit;
+    // take tests (input / output)
+    this.tests = tests;
+
+    // take command to exec code
+    this.exec_command = langs.COMAND_TO_EXEC;
+    
+    // take timelimit for current task
+    this.timelimit = tasks.TIMELIMIT;
     
     // start test with 1st test case
     this.writeInput(1);
-
 };
 
 /**
@@ -67,7 +61,7 @@ TestSystem.prototype.testing = function testing(solution, filename) {
  * @returns {undefined}
  */
 TestSystem.prototype.writeInput = function writeInput(run) {
-    fs.writeFile('input.txt', this.tests[run-1].input, function(){
+    fs.writeFile('input.txt', this.tests[run-1].INPUT_DATA, function(){
 	test_system.emit('inputIsWrited', run);
     });
 };
@@ -83,7 +77,7 @@ test_system.on('inputIsWrited', function(run){
  * @returns {undefined}
  */
 TestSystem.prototype.writeEtalon = function(run) {
-    fs.writeFile('etalon.txt', this.tests[run-1].output, function(){
+    fs.writeFile('etalon.txt', this.tests[run-1].OUTPUT_DATA, function(){
 	test_system.emit('etalonIsWrited', run);
     });
 };
@@ -109,11 +103,13 @@ TestSystem.prototype.execCode = function(run) {
         if(stderr === '')
             test_system.emit('codeIsExecuted', run);
         else {
-            var error = new Error('runtime error');
-            error.name = 'Runtime Error';
-            error.message = 'Solution #' + solution + ' is incorrect.';
-            error.solution = solution;
-            test_system.emit('runtimeError', error);
+            var res = {
+                id_solution: solution.ID_SOLUTION,
+                result: 'runtime error',
+                error_log: error,
+                number_of_fail_test: run
+            };
+            test_system.emit('runtimeError', res);
         }
     });
 };
@@ -139,24 +135,32 @@ TestSystem.prototype.compareFiles = function(run) {
         if(stdout === '')
             test_system.emit('filesAreCompared', run);
         else {
-            var error = new Error('test failed');
-            error.name = 'Test Failed';
-            error.message = 'Test #' + run + 
-                    ' for solution #' + solution + ' is fail.';
-            error.test = run;
-            error.solution = solution;
-            test_system.emit('testFailed', error);
+            var res = {
+                id_solution: solution.ID_SOLUTION,
+                result: 'test failed',
+                error_log: '',
+                number_of_fail_test: run
+            };
+            test_system.emit('testFailed', res);
         }
     });
 };
 test_system.on('filesAreCompared', function(run){
     //console.log('files are compared');
+    var solution = this.solution;
     // start next test
     run++;
     if(run <= this.n_tests)
         this.writeInput(run);
-    else
-        test_system.emit('success');
+    else {
+        var res = {
+            id_solution: solution.ID_SOLUTION,
+            result: 'success',
+            error_log: '',
+            number_of_fail_test: 0
+        };
+        test_system.emit('success', res);
+    }
 });
 
 // export object of class to other module
