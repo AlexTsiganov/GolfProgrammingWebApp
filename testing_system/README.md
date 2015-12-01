@@ -6,11 +6,11 @@ File `index.js` contains example of using function `testing()`.
 
 ***
 
-Main function:
+###Main function:
 
 `testing(filename, langs, tasks, tests, solutions)`
 
-Arguments:
+####Arguments:
 
 1. `filename` - full name of the file with user's code (for example, `/home/user/myfolder/mycode.cpp`).
 2. `langs` - object that contains data from table "PROGRAM_LANGUAGES".
@@ -18,7 +18,7 @@ Arguments:
 4. `tests` - object that contains data from table "TESTS".
 5. `solutions` - object that contains data from table "SOLUTIONS".
 
-Returns:
+####Returns:
 
 generate events with object that contains information about test process:
 
@@ -35,11 +35,10 @@ fields of response object:
 
 ***
 
-Algorithm:
+###Algorithm:
 
-1. Take information about solution and task (language of solution, time limit for task, etc.) from database.
-2. Take test case (input / output data) from database and write it to files (`input.txt` / `etalon.txt`).
-3. Run the user's code like `programm.exe < input.txt > output.txt`.
-4. Check runtime errors and time limit.
-5. Compare `output.txt` with `etalon.txt`. If files are the same, then continue. Else update status and break the function.
-6. Back to step 2 and repeate for other test cases (if it exists).
+1. Write tests to files (input data to `input.txt` / output data to `etalon.txt`).
+2. Run the user's code like `programm.exe < input.txt > output.txt`.
+3. Check runtime errors and time limit.
+4. Compare `output.txt` with `etalon.txt`. If files are the same, then continue. Else update status and break the function.
+5. Back to step 2 and repeate for other test cases (if it exists).
