@@ -5,7 +5,7 @@ block content
     if task
     h2= task.title
     blockquote
-      p= task.description ? task.description+"asdasdas" : "у задания нет описания :("
+      p= task.description ? task.description : "у задания нет описания :("
       footer= task.authorName ? task.authorName : "Автор спрятан"
 
     .panel.panel-info
