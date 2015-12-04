@@ -22,21 +22,21 @@ var getAllTasks = function(cb) {
 };
 
 var getProgramLangs = function(argument) {
-  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}];
+  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}, {'lang': 'bash'}];
 };
 
 var getTestByTaskID = function(taskID)
 {
   // TODO: create sql table TESTS
-  return [ {'input': '123', 'output': '456'}, {'input': '123', 'output': '456'}];
+  return [ {'in': '1 2', 'out': '3'}, {'in': '2 3', 'out': '5'}];
 };
 
 var getTask = function(id, cb) {
   connection.query("SELECT * FROM tasks WHERE id = ?", id, function(err, rows, fields)
   {
     rows[0]['tests'] = getTestByTaskID(id);
+    rows[0].authorName = rows[0].author;
     cb(rows[0], err);
-    return rows[0];
   });
 };
 

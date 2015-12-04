@@ -1,13 +1,16 @@
 CREATE TABLE tasks (
   id int(11) NOT NULL AUTO_INCREMENT,
   title varchar(50),
-  description varchar(50),
+  description varchar(255),
   author varchar(50),
   PRIMARY KEY (id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-INSERT INTO tasks (title, description, author) 
+INSERT INTO tasks (title, description, author)
   VALUES("Test task title with c language", "Description", "Alex");
 
   INSERT INTO tasks (title, description, author)
     VALUES("Test task title with c++ language", "Description", "Ivan");
+
+  INSERT INTO tasks (title, description, author)
+    VALUES("Пример калькулятора", "Реализовать функцию сложения двух чисел. Проверочные данные подаются на вход программы", "Alex Tsyganov");
