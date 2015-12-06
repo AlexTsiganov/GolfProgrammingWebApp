@@ -15,7 +15,7 @@ connection.connect(function(err)
 
 
 var getAllTasks = function(cb) {
-  connection.query("SELECT ID_TASK,TASKNAME,NICKNAME FROM tasks,users where AUTHOR = ID_USER", function(err, rows, fields)
+  connection.query("SELECT ID_TASK,TASKNAME,NICKNAME FROM TASKS, USERS where AUTHOR = ID_USER", function(err, rows, fields)
   {
     console.log('Rows ', rows);
     cb(rows, err);
@@ -72,7 +72,7 @@ var getTask = function(id, cb) {
       getTestByTaskID(id, function(tests, err)
       {
         task.tests = [ {'in': '1 2', 'out': '3'}, {'in': '2 3', 'out': '5'}];
-        //task['tests'] = 
+        //task['tests'] =
         cb(task, langs, tests, err);
       });
     });
