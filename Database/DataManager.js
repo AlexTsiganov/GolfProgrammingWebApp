@@ -40,7 +40,7 @@ var getTestByTaskID = function(taskID, cb)
 };
 
 var getAllProgramlangs = function(cb) {
-  connection.query("SELECT LANGUAGE_NAME FROM program_languages", function(err, rows, fields)
+  connection.query("SELECT ID_PROGRAM_LANGUAGE, LANGUAGE_NAME FROM program_languages", function(err, rows, fields)
   {
     console.log('Rows ', rows);
     cb(rows, err);
@@ -65,12 +65,14 @@ var getProgramLangs = function(argument) {
 
 //function (task,langs,test, error)
 var getTask = function(id, cb) {
-  connection.query("SELECT * FROM tasks WHERE id_task = ?", id, function(err, rows, fields)
+  connection.query("SELECT tasks.*, NICKNAME FROM tasks, users WHERE AUTHOR = ID_USER AND id_task = ?", id, function(err, rows, fields)
   {
     var task = rows[0];
     getAllProgramlangs(function(langs, err){
       getTestByTaskID(id, function(tests, err)
       {
+        task.tests = [ {'in': '1 2', 'out': '3'}, {'in': '2 3', 'out': '5'}];
+        //task['tests'] = 
         cb(task, langs, tests, err);
       });
     });

@@ -21,56 +21,57 @@ router.put('/solution', function (req, res, next)
 {
   console.log(req.body);
   var solution = req.body.solution;
-  dataManager.getTask(req.body.taskID, function(task, error)
+  dataManager.getTask(req.body.taskID, function(task, langs, tests, error)
   {
-
-    parseSolution(task, solution, function (response) {
+    console.log("task: "+task.ID_TASK);
+    parseSolution(task, tests, solution, function (response) {
       res.send(response);
     })
 
   });
 });
 
-function parseSolution(task, solution, cb)
+function parseSolution(task, tests, solution, cb)
 {
   // TODO: Вот тут должен происходить процесс компиляции, тестирования и формироваться результат
   var response = new Object();
   response.status = 'success';
   response.message = '';
-  if (solution.lang != 'bash')
+  if (solution.lang != 8)
   {
     response.status = 'error';
     response.message = 'Используй bash';
     cb(response);
     return;
   }
-  mkdirp("tmp/tasks/"+task.id, function(err) {
+  mkdirp("tmp/tasks/"+task.ID_TASK, function(err) {
 
-    fs.writeFile('tmp/tasks/'+task.id+'/solution', solution.code, function(err) {
+    fs.writeFile('tmp/tasks/'+task.ID_TASK+'/solution', solution.code, function(err) {
         if(err)
         {
             cb(response);
             return console.log(err);
         }
-        fs.chmodSync('./tmp/tasks/'+task.id+'/solution', 0755);
+        fs.chmodSync('./tmp/tasks/'+task.ID_TASK+'/solution', 0755);
         console.log("The file was saved!");
-
-        checkTests(task, solution, response, cb, 0);
+        console.log("tCount: "+ tests.length);
+        checkTests(task, tests, solution, response, cb, 0);
 
     });
 
 });
 }
 
-function checkTests(task, solution, response, cb, indexTest)
+function checkTests(task, tests, solution, response, cb, indexTest)
 {
-  var test = task.tests[indexTest];
+
+  var test = tests[indexTest];
   console.log(test);
-  exec('./tmp/tasks/'+task.id+'/solution '+test.in, function (err, stdout, stderr) {
+  exec('./tmp/tasks/'+task.ID_TASK+'/solution '+test.INPUT_DATA, function (err, stdout, stderr) {
       console.log('stdout='+stdout.toString());
       console.log(stderr);
-      console.log('out='+test.out.toString());
-      var ver_status = parseInt(stdout,10) == test.out;
+      console.log('out='+test.OUTPUT_DATA.toString());
+      var ver_status = parseInt(stdout,10) == test.OUTPUT_DATA;
       response.status = (ver_status && response.status == 'success')?'success':'error';
       if (ver_status)
       {
@@ -83,13 +84,13 @@ function checkTests(task, solution, response, cb, indexTest)
           response.message += 'error: '+stderr+'\n';
       }
       indexTest++;
-      if (indexTest == task.tests.length)
+      if (indexTest == tests.length)
       {
         cb(response);
       }
       else {
         response.message+='\n';
-        checkTests(task, solution, response, cb, indexTest);
+        checkTests(task, tests, solution, response, cb, indexTest);
       }
   });
 };

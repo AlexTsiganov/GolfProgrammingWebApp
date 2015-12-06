@@ -31,7 +31,7 @@ block content
           each lang in langs
             .radio
                 label
-                  input(type="radio", name="langs", value=lang.LANGUAGE_NAME)
+                  input(type="radio", name="langs", value=lang.ID_PROGRAM_LANGUAGE)
                   |  #{lang.LANGUAGE_NAME}
 
     textarea.form-control(id='code' placeholder="Ваш код ..."  rows='10')
@@ -54,7 +54,7 @@ block content
     $(document).ready(function()
     {
       console.log("start");
-      $("input[name=langs][value='#{langs[3].lang}']").prop('checked', true);
+      $("input[name=langs][value='#{langs[2].ID_PROGRAM_LANGUAGE}']").prop('checked', true);
       $('#send').click(function() {
         var code = $('#code').val();
         var _lang = $('input[name=langs]:checked').val();
@@ -64,6 +64,7 @@ block content
           HoldOn.open({"message": "Отправка решения"});
           var solution = { lang: _lang,
                            code: code};
+          console.log('id_task '+#{task.ID_TASK});
           $.ajax({
             type: 'PUT',
             url: '/task/solution',
