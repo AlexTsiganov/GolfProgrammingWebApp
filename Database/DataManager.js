@@ -59,20 +59,14 @@ var getTop10Users = function(cb) {
   });
 };
 
-var getProgramLangs = function(argument) {
-  return [{'lang': 'c++'}, {'lang': 'Java'}, {'lang': 'Python'}];
-};
-
 //function (task,langs,test, error)
 var getTask = function(id, cb) {
-  connection.query("SELECT tasks.*, NICKNAME FROM tasks, users WHERE AUTHOR = ID_USER AND id_task = ?", id, function(err, rows, fields)
+  connection.query("SELECT TASKS.*, NICKNAME FROM TASKS, USERS WHERE AUTHOR = ID_USER AND id_task = ?", id, function(err, rows, fields)
   {
     var task = rows[0];
     getAllProgramlangs(function(langs, err){
       getTestByTaskID(id, function(tests, err)
       {
-        task.tests = [ {'in': '1 2', 'out': '3'}, {'in': '2 3', 'out': '5'}];
-        //task['tests'] =
         cb(task, langs, tests, err);
       });
     });
@@ -88,7 +82,6 @@ connection.query(sql1, function (err, result) {
   });
 });
 
-exports.getProgramLangs = getProgramLangs;
 exports.getAllTasks = getAllTasks;
 exports.getAllUsers = getAllUsers;
 exports.getAllProgramlangs = getAllProgramlangs;
