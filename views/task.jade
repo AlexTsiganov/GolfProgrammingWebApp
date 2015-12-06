@@ -3,10 +3,10 @@ extends layout
 block content
   #container
     if task
-    h2= task.title
+    h2= task.TASKNAME
     blockquote
-      p= task.description ? task.description : "у задания нет описания :("
-      footer= task.authorName ? task.authorName : "Автор спрятан"
+      p= task.TEXT ? task.TEXT : "у задания нет описания :("
+      footer= task.NICKNAME ? task.NICKNAME : "Автор спрятан"
 
     .panel.panel-info
       .panel-heading
@@ -19,20 +19,20 @@ block content
                th Входные данные
                th Результат
              tbody
-               each test, i in task.tests
+               each test, i in tests
                  tr
                   td= i+1
-                  td= test.in
-                  td= test.out
+                  td= test.INPUT_DATA
+                  td= test.OUTPUT_DATA
 
     .panel.panel-info
-      .panel-heading Выбор языка прогарммирования
+      .panel-heading Выбор языка программирования
       .panel-body
           each lang in langs
             .radio
                 label
-                  input(type="radio", name="langs", value=lang.lang)
-                  |  #{lang.lang}
+                  input(type="radio", name="langs", value=lang.LANGUAGE_NAME)
+                  |  #{lang.LANGUAGE_NAME}
 
     textarea.form-control(id='code' placeholder="Ваш код ..."  rows='10')
 
@@ -53,6 +53,7 @@ block content
   script(type='text/javascript').
     $(document).ready(function()
     {
+      console.log("start");
       $("input[name=langs][value='#{langs[3].lang}']").prop('checked', true);
       $('#send').click(function() {
         var code = $('#code').val();
@@ -60,13 +61,13 @@ block content
         console.log('lang: '+ _lang);
         if (code && _lang)
         {
-          HoldOn.open({"message": "Отправка решение"});
+          HoldOn.open({"message": "Отправка решения"});
           var solution = { lang: _lang,
                            code: code};
           $.ajax({
             type: 'PUT',
             url: '/task/solution',
-            data: JSON.stringify({ taskID: #{task.id}, solution: solution }),
+            data: JSON.stringify({ taskID: #{task.ID_TASK}, solution: solution }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
           }).done(function(result) {

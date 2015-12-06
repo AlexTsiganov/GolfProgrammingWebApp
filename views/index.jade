@@ -8,8 +8,8 @@ block content
      th Задание
      th Автор
    tbody
-     each task in tasks
+     each task,i in tasks
        tr
-        td #{task.id}
-        td: a(href='/task/'+task.id) #{task.title}
-        td #{task.author}
+        td #{i+1}
+        td: a(href='/task/'+task.ID_TASK) #{task.TASKNAME}
+        td #{task.NICKNAME}

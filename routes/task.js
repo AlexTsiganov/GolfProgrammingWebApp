@@ -7,12 +7,15 @@ var mkdirp = require('mkdirp');
 
 router.get('/:id', function(req, res, next)
 {
-  dataManager.getTask(req.params.id, function(task, error)
-  {
-    res.render('task', { task: task,
-                         langs: dataManager.getProgramLangs()});
-  });
+    dataManager.getTask(req.params.id, function (task,langs,test, error) {
+        res.render('task', {
+            task: task,
+            langs: langs,
+            tests: test
+        });
+    });
 });
+
 
 router.put('/solution', function (req, res, next)
 {

@@ -1,16 +1,57 @@
-CREATE TABLE tasks (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  title varchar(50),
-  description varchar(255),
-  author varchar(50),
-  PRIMARY KEY (id)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS USERS
+(
+ID_USER int NOT NULL AUTO_INCREMENT primary key,
+PASSWORD varchar(25),
+EMAIL varchar(35) unique,
+NICKNAME varchar (25) unique,
+SECONDNAME varchar(20),
+FIRSTNAME varchar(20),
+PHONE varchar (11) unique,
+REGISTRATION_DATE date,
+LAST_VISIT date
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO tasks (title, description, author)
-  VALUES("Test task title with c language", "Description", "Alex");
+CREATE TABLE IF NOT EXISTS TASKS
+(
+ID_TASK int NOT NULL AUTO_INCREMENT primary key,
+TASKNAME varchar (50),
+TEXT varchar (5000),
+TASK_DATE date,
+TIMELIMIT int,
+AUTHOR int, FOREIGN KEY(AUTHOR) REFERENCES USERS(ID_USER)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-  INSERT INTO tasks (title, description, author)
-    VALUES("Test task title with c++ language", "Description", "Ivan");
+CREATE TABLE IF NOT EXISTS TESTS
+(
+ID_TEST int NOT NULL AUTO_INCREMENT primary key,
+ID_TASK int, FOREIGN KEY(ID_TASK) REFERENCES TASKS(ID_TASK),
+INPUT_DATA varchar (1000),
+OUTPUT_DATA varchar (1000),
+VISIBLE int
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-  INSERT INTO tasks (title, description, author)
-    VALUES("Пример калькулятора", "Реализовать функцию сложения двух чисел. Проверочные данные подаются на вход программы", "Alex Tsyganov");
+CREATE TABLE IF NOT EXISTS PROGRAM_LANGUAGES
+(
+ID_PROGRAM_LANGUAGE int NOT NULL AUTO_INCREMENT primary key,
+LANGUAGE_NAME varchar (12),
+HOW_TO_INSTALL varchar (100),
+VERSION varchar (25),
+COMAND_TO_COMPILE varchar (100),
+COMAND_TO_EXEC varchar (50),
+COMPILER_OPTIONS varchar (10),
+EX_COMPILED_FILE varchar (6),
+EX_EXECUTABLE_FILE varchar (6)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS SOLUTIONS
+(
+ID_SOLUTION int NOT NULL AUTO_INCREMENT primary key,
+SOLUTION_TASK_ID int, FOREIGN KEY(SOLUTION_TASK_ID) REFERENCES TASKS(ID_TASK),
+SOLUTION_USER_ID int, FOREIGN KEY(SOLUTION_USER_ID) REFERENCES USERS(ID_USER),
+SOLUTION_DATE timestamp,
+PROGRAM_LANGUAGE int, FOREIGN KEY(PROGRAM_LANGUAGE) REFERENCES PROGRAM_LANGUAGES(ID_PROGRAM_LANGUAGE),
+TEXT varchar (10000),
+LENGTH_CODE int,
+STATUS varchar (15),
+POINTS int
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

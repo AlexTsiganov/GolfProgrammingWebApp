@@ -3,10 +3,12 @@ var router = express.Router();
 var dataManager = require('../Database/DataManager');
 
 router.get('/', function(req, res, next) {
-   res.render('toplist', { title: 'Golf Programming'});
-   return;
+   dataManager.getTop10Users(function(toplist, error)
+   {
+      res.render('toplist', { title: 'Top users',
+         toplist: toplist});
+   });
 });
-
 
 
 

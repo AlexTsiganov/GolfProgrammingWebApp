@@ -2,20 +2,18 @@ extends layout
 
 block content
 
- table.table.table-striped
+ table.table.table-striped.table-hover
   thead: tr
     th  №
     th  Пользователь
     th  Количество решений
     th  Последнее решение
+    th  Сумма баллов
   tbody
-    tr
-      td 1       
-      td Admin 
-      td 123
-      td Факториал
-    tr
-      td 2
-      td User1
-      td 12
-      td Матрицы
+    each toplists, i in toplist
+      tr
+        td #{i+1}
+        td #{toplists.NICKNAME}
+        td #{toplists.CNT}
+        td Калькулятор
+        td #{toplists.SUMPOINTS}
