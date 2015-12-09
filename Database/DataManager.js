@@ -32,7 +32,7 @@ var getAllUsers = function(cb) {
 
 var getTestByTaskID = function(taskID, cb)
 {
-  connection.query("SELECT * FROM tests where id_task = ? ",taskID, function(err, rows, fields)
+  connection.query("SELECT * FROM TESTS where ID_TASK = ? ",taskID, function(err, rows, fields)
   {
     console.log('Rows ', rows);
     cb(rows, err);
@@ -40,7 +40,7 @@ var getTestByTaskID = function(taskID, cb)
 };
 
 var getAllProgramlangs = function(cb) {
-  connection.query("SELECT ID_PROGRAM_LANGUAGE, LANGUAGE_NAME FROM program_languages", function(err, rows, fields)
+  connection.query("SELECT ID_PROGRAM_LANGUAGE, LANGUAGE_NAME FROM PROGRAM_LANGUAGES", function(err, rows, fields)
   {
     console.log('Rows ', rows);
     cb(rows, err);
