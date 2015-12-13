@@ -1,5 +1,4 @@
 // required modules
-var db = require('./database');             // connect to "virtual" database
 var events = require('events');             // for events handling
 var exec = require('child_process').exec;   // for execute external code
 var fs = require('fs');                     // for work with files
@@ -7,7 +6,6 @@ var fs = require('fs');                     // for work with files
 // constructor of the class TestSystem
 var TestSystem = function TestSystem(){
     events.EventEmitter.call(this);
-	this.n_tests = 3;
 };
 require('util').inherits(TestSystem, events.EventEmitter);
 
@@ -25,31 +23,38 @@ var test_system = new TestSystem();
 /**
  * Main function for testing client's code.
  * This function starts the test - calls the function writeInput().
- * @param {type} filename - full name (with path) of the file with code.
- * @param {type} langs - data from table "PROGRAM_LANGUAGES".
- * @param {type} tasks - data from table "TASKS".
- * @param {type} tests - data from table "TESTS".
- * @param {type} solutions - data from table "SOLUTIONS".
+ * @param {type} lang - data from table "PROGRAM_LANGUAGES".
+ * @param {type} task - data from table "TASKS".
+ * @param {type} test - data from table "TESTS".
+ * @param {type} solution - data from table "SOLUTIONS".
  * @returns {undefined}
  */
-TestSystem.prototype.testing = function testing(filename, langs, tasks, tests, 
-        solutions) {
+TestSystem.prototype.testing = function testing(lang, task, test, solution) {
+    
+    console.log('Test: ', test);
+    console.log('Lang: ', lang);
+    console.log('Task: ', task);
+    console.log('Solution: ', solution);
     
     // take solution
-    this.solution = solutions;
+    this.solution = solution;
     
     // take filename
-    this.code = filename;
+    this.code = './task/' + task[0].ID_TASK + '/solution/' + 
+            solution[0].ID_SOLUTION + '/main' + lang[0].EX_EXECUTABLE_FILE;
     
     // take tests (input / output)
-    this.tests = tests;
+    this.tests = test;
 
     // take command to exec code
-    this.exec_command = langs.COMAND_TO_EXEC;
+    this.exec_command = lang[0].COMAND_TO_EXEC;
     
     // take timelimit for current task
-    this.timelimit = tasks.TIMELIMIT;
+    this.timelimit = task.TIMELIMIT;
     
+    // take number of tests
+    this.n_tests = Object.keys(test).length;
+
     // start test with 1st test case
     this.writeInput(1);
 };
@@ -96,22 +101,23 @@ test_system.on('etalonIsWrited', function(run){
 TestSystem.prototype.execCode = function(run) {
     var solution = this.solution;
     exec(this.exec_command + ' ' + this.code + ' < input.txt > output.txt',
-    function(error, stdout, stderr){
-        //console.log('error = ' + error + '\n');
-        //console.log('stdout = ' + stdout + '\n');
-        //console.log('strerr = ' + stderr + '\n');
-        if(stderr === '')
-            test_system.emit('codeIsExecuted', run);
-        else {
-            var res = {
-                id_solution: solution.ID_SOLUTION,
-                result: 'runtime error',
-                error_log: error,
-                number_of_fail_test: run
-            };
-            test_system.emit('runtimeError', res);
+        function(error, stdout, stderr){
+            //console.log('error = ' + error + '\n');
+            //console.log('stdout = ' + stdout + '\n');
+            //console.log('strerr = ' + stderr + '\n');
+            if(stderr === '')
+                test_system.emit('codeIsExecuted', run);
+            else {
+                var res = {
+                    id_solution: solution[0].ID_SOLUTION,
+                    result: 'runtime error',
+                    error_log: error,
+                    number_of_fail_test: run
+                };
+                test_system.emit('runtimeError', res);
+            }
         }
-    });
+    );
 };
 test_system.on('codeIsExecuted', function(run){
     //console.log('code is executed');
@@ -136,7 +142,7 @@ TestSystem.prototype.compareFiles = function(run) {
             test_system.emit('filesAreCompared', run);
         else {
             var res = {
-                id_solution: solution.ID_SOLUTION,
+                id_solution: solution[0].ID_SOLUTION,
                 result: 'test failed',
                 error_log: '',
                 number_of_fail_test: run
@@ -154,10 +160,10 @@ test_system.on('filesAreCompared', function(run){
         this.writeInput(run);
     else {
         var res = {
-            id_solution: solution.ID_SOLUTION,
+            id_solution: solution[0].ID_SOLUTION,
             result: 'success',
             error_log: '',
-            number_of_fail_test: 0
+            number_of_fail_test: ''
         };
         test_system.emit('success', res);
     }

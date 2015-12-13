@@ -2,21 +2,22 @@
 
 File `testing.js` contains description of class TestSystem with main function `testing()`.
 
-File `index.js` contains example of using function `testing()`.
+File `db_test.js` contains example of using function `testing()` with mySQL database.
+
+Folder `mock data` contains examples of client's programs.
 
 ***
 
 ###Main function:
 
-`testing(filename, langs, tasks, tests, solutions)`
+`testing(lang, task, test, solution)`
 
 ####Arguments:
 
-1. `filename` - full name of the file with user's code (for example, `/home/user/myfolder/mycode.cpp`).
-2. `langs` - object that contains data from table "PROGRAM_LANGUAGES".
-3. `tasks` - object that contains data from table "TASKS".
-4. `tests` - object that contains data from table "TESTS".
-5. `solutions` - object that contains data from table "SOLUTIONS".
+1. `lang` - object that contains data from table "PROGRAM_LANGUAGES".
+2. `task` - object that contains data from table "TASKS".
+3. `test` - object that contains data from table "TESTS".
+4. `solution` - object that contains data from table "SOLUTIONS".
 
 ####Returns:
 
