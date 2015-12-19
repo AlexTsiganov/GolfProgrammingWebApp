@@ -7,6 +7,9 @@ router.get('/', function(req, res, next)
 {
   dataManager.getAllTasks(function(tasks, error)
   {
+    if (error) {
+        throw error;
+    }
     res.render('index', { title: 'Golf Programming',
                           tasks: tasks});
   });

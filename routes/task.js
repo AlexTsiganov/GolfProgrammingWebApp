@@ -8,6 +8,10 @@ var mkdirp = require('mkdirp');
 router.get('/:id', function(req, res, next)
 {
     dataManager.getTask(req.params.id, function (task,langs,test, error) {
+        if (error) {
+            throw error;
+        }
+
         res.render('task', {
             task: task,
             langs: langs,
@@ -45,7 +49,9 @@ function parseSolution(task, tests, solution, cb)
     return;
   }
   mkdirp("tmp/tasks/"+task.ID_TASK, function(err) {
-
+    if (err) {
+        throw err;
+    }
     fs.writeFile('tmp/tasks/'+task.ID_TASK+'/solution', solution.code, function(err) {
         if(err)
         {
