@@ -75,6 +75,57 @@ var getTask = function(id, cb) {
   });
 };
 
+var getTaskObject = function(solution_id, cb) {
+    connection.query("SELECT * FROM TASKS where ID_TASK IN \
+            (SELECT SOLUTION_TASK_ID from SOLUTIONS where ID_SOLUTION = ?)",
+            solution_id, function(error, task) {
+        cb(error, task);
+    });
+};
+
+var getTestObject = function(solution_id, cb) {
+    connection.query("SELECT * FROM TESTS where ID_TASK IN \
+            (SELECT SOLUTION_TASK_ID from SOLUTIONS where ID_SOLUTION = ?)",
+            solution_id, function(error, test) {
+        cb(error, test);
+    });
+};
+
+var getLangObject = function(solution_id, cb) {
+    connection.query("SELECT * FROM PROGRAM_LANGUAGES where ID_PROGRAM_LANGUAGE IN \
+            (SELECT PROGRAM_LANGUAGE from SOLUTIONS where ID_SOLUTION = ?)",
+            solution_id, function(error, lang) {
+        cb(error, lang);
+    });
+};
+
+var getSolutionObject = function(solution_id, cb) {
+    connection.query("SELECT * FROM SOLUTIONS where ID_SOLUTION = ?",
+            solution_id, function(error, solution) {
+        cb(error, solution);
+    });
+};
+
+var getObjects = function(solution_id, cb) {
+    var Test = null;
+    var Lang = null;
+    var Task = null;
+    var Solution = null;
+    getTaskObject(solution_id, function(error, task) {
+        Task = task;
+        getTestObject(solution_id, function(error, test) {
+            Test = test;
+            getLangObject(solution_id, function(error, lang) {
+                Lang = lang;
+                getSolutionObject(solution_id, function(error, solution) {
+                    Solution = solution;
+                    cb(error, Test, Lang, Task, Solution);
+                });
+            });
+        });
+    });
+};
+
 var sql1 = "SET CHARACTER SET utf8";
 connection.query(sql1, function (err, result) {
   var sql = "SET SESSION collation_connection ='utf8_general_ci";
@@ -88,3 +139,4 @@ exports.getAllProgramlangs = getAllProgramlangs;
 exports.getTask = getTask;
 exports.getTestByTaskID = getTestByTaskID;
 exports.getTop10Users = getTop10Users;
+exports.getObjects = getObjects;
