@@ -1,81 +1,55 @@
 var selects = require('../Database/DataManager');
+//var selects = require('./tmp');
 var events = require('events');
 var createFile = require("./createFile");
 var fs = require('fs');
 var exec = require("child_process").exec;
 var eventEmitter = new events.EventEmitter();
-var PATH = "./tests/";
 
-var fileName = 'Main';
 
-var execFileName=PATH+"Main";
-var outputFile = "./results.txt";
-//запросы к базе данных, id - идентификатор решения, language_id - идентификатор языка
-function compileSystem(id, language_id) {
-	var progText = selects.getProgText(id);
-	eventEmitter.emit('text', progText);
-	var ext = selects.getExt(id);
-	eventEmitter.emit('ext', ext);
-	var compiler = selects.getPathToCompiler(language_id);
-	eventEmitter.emit('compiler', compiler);
-	var execCommand = selects.getExecCommand(language_id);
-	eventEmitter.emit('execCommand', execCommand);
-	var options = selects.getOptions(language_id);
-	eventEmitter.emit('options', options);
+
+
+/*Example of langInfo object*/
+/*var tmp = new Object();
+tmp.COMAND_TO_COMPILE="gcc";
+tmp.EX_COMPILED_FILE=".c";
+tmp.COMPILER_OPTIONS="-o";
+*/
+function compileSystem(taskid, langInfo, solution_id, cb) {
+	var PATH = "../tasks/"+taskid+"/solutions/"+solution_id+"/";
+	var outputFile = PATH+"results.txt";
+	var fileName = 'main';
+	console.log('langInfo: '+langInfo);			
+	if (langInfo.COMAND_TO_COMPILE!=""){
+		if(langInfo.COMPILER_OPTIONS!=''){
+			console.log(langInfo.COMAND_TO_COMPILE+' '+PATH+fileName+langInfo.EX_COMPILED_FILE+' '+langInfo.COMPILER_OPTIONS+' '+PATH+fileName);
+			exec(langInfo.COMAND_TO_COMPILE+' '+PATH+fileName+langInfo.EX_COMPILED_FILE+' '+langInfo.COMPILER_OPTIONS+' '+PATH+fileName+" 2>"+PATH+"compilelog.txt", 					function (err, stdout,stderr){
+				eventEmitter.emit('readyToExec',cb);
+			});				
+		}	
+		else {
+			console.log('no options');
+			exec(langInfo.COMAND_TO_COMPILE+" "+PATH+fileName+langInfo.EX_COMPILED_FILE+" 2>"+PATH+"compilelog.txt",function (err, stdout,stderr){
+				eventEmitter.emit('readyToExec',cb);
+			});	
+		}					
+	}
+	else {
+		console.log('no compiler');
+		eventEmitter.emit('readyToExec',cb);	
+	}
+	
 }
 
-
-//когда и текст решения прочитан из БД и расширение, то создается файл на сервере
-eventEmitter.on('text', function(progText){
-	console.log(progText)
-	eventEmitter.on('ext', function(ext){
-		console.log('ext: '+ext);
-		fs.writeFile(fileName+ext, progText,function(err) {
-			if(err) console.log('can`t create file');			
-			else
-			{
-				console.log('file created');
-			}
-
-		});
-		eventEmitter.emit('fileCreated', ext);
-		
-	});
+eventEmitter.on('readyToExec', function(cb){
+	cb('I`m ready1');
 });
-//когда файл создаен, и прочитан компилятор из БД, то компилируется
-eventEmitter.on('fileCreated',function(ext){
-	console.log('ext: '+ext);
-	eventEmitter.on('compiler', function(compiler){
-		console.log('compiler: '+compiler);
-		if (compiler!=""){
-			eventEmitter.on('options', function(options){
-				if(options!=''){
-					console.log(options);
-					exec(compiler+' '+PATH+fileName+ext+' '+options+' '+execFileName+' 2>log.txt');				
-				}	
-				else {
-					console.log('no options');
-					exec(compiler+" "+PATH+fileName+ext+' 2> log.txt');
-				}		
-			});
-			
-		}
-		else {
-			console.log('no compiler');
-			execFileName = execFileName+ext;	
-		}
-		eventEmitter.emit('readyToExec',execFileName);
-	});
-});
+	
+	
 
-//Когда готово к исполнению, то запускается
-eventEmitter.on('readyToExec', function(execFileName){
-	console.log('execFileName: '+execFileName);
-	eventEmitter.on('execCommand', function(execCommand){
-		console.log('execCommand: '+execCommand);
-		exec(execCommand+" "+execFileName+" >"+outputFile);
-	});
-});
 
- compileSystem(1,3);
-//exports compileSystem = compileSystem;
+//example of use compileSystem function
+/*compileSystem(1,tmp,1, function(rd){
+	console.log(rd);
+});*/
+exports compileSystem = compileSystem;
