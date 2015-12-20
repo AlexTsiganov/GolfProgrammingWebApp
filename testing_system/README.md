@@ -2,8 +2,6 @@
 
 File `testing.js` contains description of class TestSystem with main function `testing()`.
 
-File `db_test.js` contains example of using function `testing()` with mySQL database.
-
 Folder `mock data` contains examples of client's programs.
 
 ***
