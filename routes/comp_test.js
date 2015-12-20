@@ -1,13 +1,13 @@
 var mysql = require('mysql');
-var test_system = require('./testing');
-var compile_system = require('./compileSystem');
+var test_system = require('../testing_system/testing');
+var compile_system = require('../compile_system/compileSystem');
 var dataManager = require('./Database/DataManager');
 
 // TODO: get id of solution
-// ...
+var solution_id = 2;
 
-// take info from DB, using solution_id (for example, 2)
-dataManager.getObjects(2, function(error, Test, Lang, Task, Solution) {
+// take info from DB, using solution_id
+dataManager.getObjects(solution_id, function(error, Test, Lang, Task, Solution) {
     
     // call compiling function
     compile_system(Task, Lang, Solution, function(t){
