@@ -1,7 +1,5 @@
-var selects = require('../Database/DataManager');
-//var selects = require('./tmp');
+
 var events = require('events');
-var createFile = require("./createFile");
 var fs = require('fs');
 var exec = require("child_process").exec;
 var eventEmitter = new events.EventEmitter();
@@ -15,8 +13,8 @@ tmp.COMAND_TO_COMPILE="gcc";
 tmp.EX_COMPILED_FILE=".c";
 tmp.COMPILER_OPTIONS="-o";
 */
-function compileSystem(taskid, langInfo, solution_id, cb) {
-	var PATH = "../tasks/"+taskid+"/solutions/"+solution_id+"/";
+function compileSystem(task, langInfo, solution, cb) {
+	var PATH = "../tasks/"+task.ID_TASK+"/solutions/"+solution.ID_SOLUTION+"/";
 	var outputFile = PATH+"results.txt";
 	var fileName = 'main';
 	console.log('langInfo: '+langInfo);			
@@ -42,7 +40,7 @@ function compileSystem(taskid, langInfo, solution_id, cb) {
 }
 
 eventEmitter.on('readyToExec', function(cb){
-	cb('I`m ready1');
+	cb('ОК');
 });
 	
 	
@@ -52,4 +50,4 @@ eventEmitter.on('readyToExec', function(cb){
 /*compileSystem(1,tmp,1, function(rd){
 	console.log(rd);
 });*/
-exports compileSystem = compileSystem;
+module.exports = compileSystem; 
