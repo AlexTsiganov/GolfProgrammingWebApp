@@ -27,21 +27,20 @@ var test_system = new TestSystem();
  * @param {type} task - data from table "TASKS".
  * @param {type} test - data from table "TESTS".
  * @param {type} solution - data from table "SOLUTIONS".
- * @returns {undefined}
  */
 TestSystem.prototype.testing = function testing(lang, task, test, solution) {
     
-    console.log('Test: ', test);
-    console.log('Lang: ', lang);
-    console.log('Task: ', task);
-    console.log('Solution: ', solution);
+    //console.log('Test: ', test);
+    //console.log('Lang: ', lang);
+    //console.log('Task: ', task);
+    //console.log('Solution: ', solution);
     
     // take solution
     this.solution = solution;
     
     // take filename
-    this.code = './task/' + task[0].ID_TASK + '/solution/' + 
-            solution[0].ID_SOLUTION + '/main' + lang[0].EX_EXECUTABLE_FILE;
+    this.code = '../tasks/' + task[0].ID_TASK + '/solutions/' + 
+            solution[0].ID_SOLUTION + '/main';
     
     // take tests (input / output)
     this.tests = test;
@@ -63,7 +62,6 @@ TestSystem.prototype.testing = function testing(lang, task, test, solution) {
  * Function for write input test in file. Completion of the function generates 
  * the event 'inputIsWrited'. This event calls the function writeEtalon().
  * @param {type} run - number of current test case (1, 2, 3, ...).
- * @returns {undefined}
  */
 TestSystem.prototype.writeInput = function writeInput(run) {
     fs.writeFile('input.txt', this.tests[run-1].INPUT_DATA, function(){
@@ -79,7 +77,6 @@ test_system.on('inputIsWrited', function(run){
  * Function for write output test in file. Completion of the function generates 
  * the event 'etalonIsWrited'. This event calls the function execCode().
  * @param {type} run - number of current test case (1, 2, 3, ...).
- * @returns {undefined}
  */
 TestSystem.prototype.writeEtalon = function(run) {
     fs.writeFile('etalon.txt', this.tests[run-1].OUTPUT_DATA, function(){
@@ -96,7 +93,6 @@ test_system.on('etalonIsWrited', function(run){
  * function generates error event 'runtimeError'. Else function generates
  * the event 'codeIsExecuted' and calls the function compareFiles().
  * @param {type} run - number of current test case (1, 2, 3, ...).
- * @returns {undefined}
  */
 TestSystem.prototype.execCode = function(run) {
     var solution = this.solution;
@@ -129,7 +125,6 @@ test_system.on('codeIsExecuted', function(run){
  * If files are not the same, then function generates error event 'testFailed'.
  * Else function generates the event 'filesAreCompared' and starts new test.
  * @param {type} run - number of current test case (1, 2, 3, ...).
- * @returns {undefined}
  */
 TestSystem.prototype.compareFiles = function(run) {
     var solution = this.solution;
