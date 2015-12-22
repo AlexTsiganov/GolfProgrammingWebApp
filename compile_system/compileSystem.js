@@ -25,27 +25,49 @@ function compileSystem(task, langInfo, solution, cb) {
 		            langInfo[0].ex_compiled_file + ' ' + 
 		            langInfo[0].compiler_options + ' ' + PATH + fileName + 
 		            " 2>" + PATH + "compilelog.txt", function(err, stdout, stderr){
-		                eventEmitter.emit('readyToExec', cb);
+		               // eventEmitter.emit('readyToExec', cb,'ok');
+				isCorrectCompilation(task, solution, cb);
 		            });				
 		} else {
 		    //log.info('no options');
 		    exec(langInfo[0].comand_to_compile + " " + PATH + fileName + 
 		            langInfo[0].ex_compiled_file + " 2>" + PATH + 
 		            "compilelog.txt", function(err, stdout, stderr){
-		                eventEmitter.emit('readyToExec', cb);
+		               // eventEmitter.emit('readyToExec', cb, 'ok');
+				isCorrectCompilation(task, solution, cb);
 		            });	
 		}					
 	    } else {
 		//log.info('no compiler');
-		eventEmitter.emit('readyToExec', cb);	
+		eventEmitter.emit('readyToExec', cb, 'ok');	
 	    }
 	});
 }
 
-eventEmitter.on('readyToExec', function(cb){
-    cb('OK');
+eventEmitter.on('readyToExec', function(cb, res){
+    cb(res);
 });
 
+function isCorrectCompilation(task, solution, cb) {
+	//Тут нужно уточнить, сколько точек в пути указывать.
+	fs.readFile('../tasks/' + task[0].id + "/solutions/" + solution[0].id + "/compilelog.txt", 
+		{encoding: 'utf8'}, function (err, data) {
+		if (err) throw err;
+		var logArr = data.split(' ');
+		var k=0;
+		for (var i =0; i<logArr.length; i++) {
+			if (logArr[i].toUpperCase()!='ERROR'){
+				k++;
+				break;					
+			}										
+		}
+		if (k==logArr.length) {
+			eventEmitter.emit('readyToExec', cb, 'ok');		
+		} else {
+			eventEmitter.emit('readyToExec', cb, 'fail');	
+		}
+	});
+}
 //example of use compileSystem function
 /*compileSystem(1,tmp,1, function(rd){
 	log.info(rd);
