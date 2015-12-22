@@ -5,6 +5,8 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var log = require('../libs/log.js')(module);
+var compile_system = require('../compile_system/compileSystem');
+var test_system = require('../testing_system/testing');
 
 router.get('/:id', function(req, res, next)
 {
@@ -26,9 +28,11 @@ router.put('/solution', function (req, res, next)
 {
   log.info(req.body);
   var solution = req.body.solution;
+
   dataManager.getTask(req.body.taskID, function(task, langs, tests, error)
   {
-    log.info("task: "+task.ID_TASK);
+    log.info("task: "+task.id);
+    solution.id = 1;
     parseSolution(task, tests, solution, function (response) {
       res.send(response);
     })
@@ -36,20 +40,98 @@ router.put('/solution', function (req, res, next)
   });
 });
 
-function parseSolution(task, tests, solution, cb)
+function emptyJSONResponse()
 {
-  // TODO: Вот тут должен происходить процесс компиляции, тестирования и формироваться результат
   var response = new Object();
   response.status = 'success';
-  response.message = '';
-  if (solution.lang != 8)
+  response.message = 'Empty response';
+  return response;
+}
+
+function JSONResponseWithError(error)
+{
+  var response = new Object();
+  response.status = 'error';
+  response.message = 'error';
+  return response;
+}
+
+function parseSolution(task, tests, solution, cb)
+{
+  writeSolutionToFile(solution, task, function (path_to_code)
   {
-    response.status = 'error';
-    response.message = 'Используй bash';
-    cb(response);
-    return;
-  }
-  mkdirp("tmp/tasks/"+task.ID_TASK, function(err) {
+    if (solution.lang != 8)
+    {
+      // вот тут вызывать функции компиляции\тестиования
+      var response = new Object();
+      response.status = 'success';
+      response.message = 'вот тут вызывать функции компиляции\тестиования';
+
+      // dataManager.getObjects(solution.id, function(error, Test, Lang, Task, Solution) {
+      //
+      //     // call compiling function
+      //     compile_system(Task, Lang, Solution, function(t){
+      //         log.info(t);
+      //         // call testing function
+      //         test_system.testing(Lang, Task, Test, Solution);
+      //     });
+      //
+      // });
+      cb(response);
+    }
+    else
+    {
+      //bash_compile(task, tests, solution, cb);
+      cb(emptyJSONResponse());
+    }
+  });
+}
+
+// events handling for testing function
+test_system.on('runtimeError', function(res) {
+    log.info(res.id_solution);           // id of checked solution
+    log.info(res.result);                // result of testing
+    log.info(res.error_log);             // log of the error
+    log.info(res.number_of_fail_test);   // number of failed test
+});
+
+test_system.on('testFailed', function(res) {
+    log.info(res.id_solution);           // id of checked solution
+    log.info(res.result);                // result of testing
+    log.info(res.error_log);             // log of the error
+    log.info(res.number_of_fail_test);   // number of failed test
+});
+
+test_system.on('success', function(res){
+    log.info(res.id_solution);           // id of checked solution
+    log.info(res.result);                // result of testing
+    log.info(res.error_log);             // log of the error
+    log.info(res.number_of_fail_test);   // number of failed test
+});
+
+function writeSolutionToFile(solution, task, cb)
+{
+  var path_to_code = './tasks/'+task.id+'/solutions/'+solution.id+'/';
+  mkdirp(path_to_code, function(err) {
+    if (err) {
+        throw err;
+    }
+
+    fs.writeFile(path_to_code+'/main', solution.code, function(err) {
+      if (err) {
+          throw err;
+      }
+        fs.chmodSync(path_to_code+'/main', 0755);
+        cb(path_to_code+'/main');
+    });
+  });
+}
+
+// -------- #BASH --------
+
+function bash_compile(task, tests, solution, cb)
+{
+  mkdirp("tmp/tasks/"+task.id, function(err) {
     if (err) {
         throw err;
     }

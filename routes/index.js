@@ -10,8 +10,7 @@ router.get('/', function(req, res, next)
     if (error) {
         throw error;
     }
-    res.render('index', { title: 'Golf Programming',
-                          tasks: tasks});
+    res.render('index', { title: 'Golf Programming', tasks: tasks});
   });
 
 });

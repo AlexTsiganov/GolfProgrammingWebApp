@@ -16,7 +16,7 @@ connection.connect(function(err)
 
 
 var getAllTasks = function(cb) {
-  connection.query("SELECT ID_TASK,TASKNAME,NICKNAME FROM TASKS, USERS where AUTHOR = ID_USER", function(err, rows, fields)
+  connection.query("SELECT tasks.id,name,users.nickname FROM tasks, users where author = users.id", function(err, rows, fields)
   {
     log.info('Rows ', rows);
     cb(rows, err);
@@ -33,27 +33,27 @@ var getAllUsers = function(cb) {
 
 var getTestByTaskID = function(taskID, cb)
 {
-  connection.query("SELECT * FROM TESTS where ID_TASK = ? ",taskID, function(err, rows, fields)
+  connection.query("SELECT * FROM tests WHERE task_id = ? ",taskID, function(err, rows, fields)
   {
     log.info('Rows ', rows);
     cb(rows, err);
   });
 };
 
-var getAllProgramlangs = function(cb) {
-  connection.query("SELECT ID_PROGRAM_LANGUAGE, LANGUAGE_NAME FROM PROGRAM_LANGUAGES", function(err, rows, fields)
+var getAllProgramLangs = function(cb) {
+  connection.query("SELECT id, name FROM program_languages", function(err, rows, fields)
   {
-    log.info('Rows ', rows);
+    log.info('Langs: ', rows);
     cb(rows, err);
   });
 };
 
 var getTop10Users = function(cb) {
-  connection.query("select ID_USER,NICKNAME,COUNT(ID_SOLUTION) as CNT,sum(POINTS) as SUMPOINTS" +
-      " from USERS,SOLUTIONS where ID_USER=SOLUTION_USER_ID and ID_USER " +
-      "in (select SOLUTION_USER_ID from SOLUTIONS group by SOLUTION_USER_ID " +
-      "order by sum(POINTS)) group by ID_USER,NICKNAME order" +
-      " by sum(POINTS) desc;", function(err, rows, fields)
+  connection.query("select users.id,nickname,COUNT(solutions.id) as count,sum(points) as total" +
+        " from users,solutions where users.id=user_id and users.id " +
+        "in (select user_id from solutions group by user_id " +
+        "order by sum(points)) group by users.id,nickname order" +
+        " by sum(points) desc", function(err, rows, fields)
   {
     log.info('Rows ', rows);
     cb(rows, err);
@@ -62,10 +62,10 @@ var getTop10Users = function(cb) {
 
 //function (task,langs,test, error)
 var getTask = function(id, cb) {
-  connection.query("SELECT TASKS.*, NICKNAME FROM TASKS, USERS WHERE AUTHOR = ID_USER AND id_task = ?", id, function(err, rows, fields)
+  connection.query("SELECT tasks.id,name,description, nickname FROM tasks, users WHERE author = users.id AND tasks.id = ?", id, function(err, rows, fields)
   {
     var task = rows[0];
-    getAllProgramlangs(function(langs, err){
+    getAllProgramLangs(function(langs, err){
       getTestByTaskID(id, function(tests, err)
       {
         cb(task, langs, tests, err);
@@ -77,31 +77,31 @@ var getTask = function(id, cb) {
 };
 
 var getTaskObject = function(solution_id, cb) {
-    connection.query("SELECT * FROM TASKS where ID_TASK IN \
-            (SELECT SOLUTION_TASK_ID from SOLUTIONS where ID_SOLUTION = ?)",
+    connection.query("SELECT * FROM tasks where id IN \
+            (SELECT task_id from solutions where id = ?)",
             solution_id, function(error, task) {
         cb(error, task);
     });
 };
 
 var getTestObject = function(solution_id, cb) {
-    connection.query("SELECT * FROM TESTS where ID_TASK IN \
-            (SELECT SOLUTION_TASK_ID from SOLUTIONS where ID_SOLUTION = ?)",
+    connection.query("SELECT * FROM tests where id IN \
+            (SELECT task_id from solutions where id = ?)",
             solution_id, function(error, test) {
         cb(error, test);
     });
 };
 
 var getLangObject = function(solution_id, cb) {
-    connection.query("SELECT * FROM PROGRAM_LANGUAGES where ID_PROGRAM_LANGUAGE IN \
-            (SELECT PROGRAM_LANGUAGE from SOLUTIONS where ID_SOLUTION = ?)",
+    connection.query("SELECT * FROM program_languages where id IN \
+            (SELECT program_language from solutions where id = ?)",
             solution_id, function(error, lang) {
         cb(error, lang);
     });
 };
 
 var getSolutionObject = function(solution_id, cb) {
-    connection.query("SELECT * FROM SOLUTIONS where ID_SOLUTION = ?",
+    connection.query("SELECT * FROM solutions where id = ?",
             solution_id, function(error, solution) {
         cb(error, solution);
     });
@@ -136,7 +136,7 @@ connection.query(sql1, function (err, result) {
 
 exports.getAllTasks = getAllTasks;
 exports.getAllUsers = getAllUsers;
-exports.getAllProgramlangs = getAllProgramlangs;
+exports.getAllProgramLangs = getAllProgramLangs;
 exports.getTask = getTask;
 exports.getTestByTaskID = getTestByTaskID;
 exports.getTop10Users = getTop10Users;
