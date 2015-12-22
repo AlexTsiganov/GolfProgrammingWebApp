@@ -6,7 +6,7 @@ var eventEmitter = new events.EventEmitter();
 //var log = require('../libs/log.js')(module);
 
 function compileSystem(task, langInfo, solution, cb) {
-	var PATH = "./tasks/" + task[0].id + "/solutions/" + 
+	var PATH = "../tasks/" + task[0].id + "/solutions/" + 
 		    solution[0].id + "/";	
 	console.log(langInfo);
 	exec('cp '+PATH+'sourcefile '+PATH+ 'main'+langInfo[0].ex_compiled_file, function (err, stdout,stderr){
@@ -23,7 +23,7 @@ function compileSystem(task, langInfo, solution, cb) {
 		    //        langInfo[0].COMPILER_OPTIONS + ' ' + PATH + fileName);
 		    exec(langInfo[0].comand_to_compile + ' ' + PATH + fileName + 
 		            langInfo[0].ex_compiled_file + ' ' + 
-		            langInfo[0].compiler_options + ' ' + PATH + fileName + 
+		            langInfo[0].compiler_options + ' ' + PATH + fileName+langInfo[0].ex_executable_file + 
 		            " 2>" + PATH + "compilelog.txt", function(err, stdout, stderr){
 		               // eventEmitter.emit('readyToExec', cb,'ok');
 				isCorrectCompilation(task, solution, cb);
@@ -39,7 +39,12 @@ function compileSystem(task, langInfo, solution, cb) {
 		}					
 	    } else {
 		//log.info('no compiler');
-		eventEmitter.emit('readyToExec', cb, 'ok');	
+		//копирую файл с исходным кодом и добавляю к нему расширение
+		exec('cp '+PATH+'sourcefile '+PATH+ 'main'+langInfo[0].ex_executable_file, function (err, stdout,stderr){
+	 		if (err) return console.error(err)
+			eventEmitter.emit('readyToExec', cb, 'ok');
+		});
+			
 	    }
 	});
 }
@@ -50,7 +55,7 @@ eventEmitter.on('readyToExec', function(cb, res){
 
 function isCorrectCompilation(task, solution, cb) {
 	//Тут нужно уточнить, сколько точек в пути указывать.
-	fs.readFile('./tasks/' + task[0].id + "/solutions/" + solution[0].id + "/compilelog.txt", 
+	fs.readFile('../tasks/' + task[0].id + "/solutions/" + solution[0].id + "/compilelog.txt", 
 		{encoding: 'utf8'}, function (err, data) {
 		if (err) throw err;
 		var logArr = data.split(' ');
