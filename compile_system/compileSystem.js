@@ -9,7 +9,7 @@ function compileSystem(task, langInfo, solution, cb) {
 	var PATH = "../tasks/" + task[0].id + "/solutions/" + 
 		    solution[0].id + "/";	
 	console.log(langInfo);
-	exec('cp '+PATH+'main '+PATH+ 'main'+langInfo[0].ex_compiled_file, function (err, stdout,stderr){
+	exec('cp '+PATH+'sourcefile '+PATH+ 'main'+langInfo[0].ex_compiled_file, function (err, stdout,stderr){
 	  if (err) return console.error(err)
 	  console.log("success!")
 	    
