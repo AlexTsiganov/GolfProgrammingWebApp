@@ -2,7 +2,7 @@ var mysql      = require('mysql');
 var config = require('config');
 
 var connection = mysql.createConnection(config.get('dbConfig'));
-var log = require('../libs/log.js')(module);
+var log = require('../libs/log/log')(module);
 
 connection.connect(function(err)
 {
