@@ -7,5 +7,10 @@ router.get('/', function(req, res, next) {
    return;
 });
 
+router.post('/', function(req, res, next){
+   var username = req.body.username;
+   var password = req.body.password;
+   res.send("uname: " + username + "\npass: " + password);
+});
 
 module.exports = router;

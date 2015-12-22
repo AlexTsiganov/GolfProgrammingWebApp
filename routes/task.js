@@ -3,10 +3,12 @@ var router = express.Router();
 var dataManager = require('../Database/DataManager');
 var exec = require('child_process').exec;
 var fs = require('fs');
-var mkdirp = require('mkdirp');
-var log = require('../libs/log.js')(module);
+var mkdirp = require('mkdirp')
+    ;
+var log = require('../libs/log/log')(module);
 var compile_system = require('../compile_system/compileSystem');
 var test_system = require('../testing_system/testing');
+
 
 router.get('/:id', function(req, res, next)
 {

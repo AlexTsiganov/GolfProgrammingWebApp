@@ -3,7 +3,7 @@ var test_system = require('../testing_system/testing');
 var compile_system = require('../compile_system/compileSystem');
 var dataManager = require('./Database/DataManager');
 
-var log = require('../libs/log.js')(module);
+var log = require('../libs/log/log')(module);
 
 // TODO: get id of solution
 var solution_id = 2;
