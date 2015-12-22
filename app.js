@@ -11,6 +11,7 @@ var toplist = require('./routes/toplist');
 var login = require('./routes/login');
 var task = require('./routes/task');
 
+var log = require('./libs/log/log')(module);
 var execFile = require('child_process').execFile;
 
 var app = express();
@@ -21,11 +22,39 @@ app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//--- Настройка сессий и кук ---
+var config = require('config');
+var session = require('express-session');
+var SessionStore = require('express-mysql-session');
+var options = config.get('dbConfig');
+
+app.use(session({
+    secret: "BrownTeamTheBest",
+    key: "sid",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: null
+    },
+    store: new SessionStore(options)
+}));
+
+// Это код для тестирования кук. Пока пусть будет, позже удалю
+//app.use(function(req, res, next) {
+//    req.session.CountofVisits = req.session.CountofVisits + 1 || 1;
+//    log.info(req.session.CountofVisits);
+//    res.send("visits: " + req.session.CountofVisits);
+//});
+
+//------------------------------
 
 app.use('/', routes);
 app.use('/users', users);
