@@ -1,98 +1,78 @@
-INSERT INTO PROGRAM_LANGUAGES VALUES
+INSERT INTO program_languages VALUES
 (1,'C','sudo apt-get install gcc','.gcc 4.8.1','cc','','-o','.c','.exe');
 
-INSERT INTO PROGRAM_LANGUAGES VALUES
+INSERT INTO program_languages VALUES
 (2,'C++','sudo apt-get install gcc','.gcc 4.8.1','g++','','-o','.cpp','.exe');
 
-INSERT INTO PROGRAM_LANGUAGES VALUES
+INSERT INTO program_languages VALUES
 (3,'JAVA','"sudo apt-get install default-jre;
 sudo apt-get install default-jdk"','Java 1.8.0_60','javac','java','','.java','.class');
 
-INSERT INTO PROGRAM_LANGUAGES VALUES
+INSERT INTO program_languages VALUES
 (4,'Python','sudo apt-get install python3','Python 3.5.0','','python','','','.py');
 
-INSERT INTO PROGRAM_LANGUAGES VALUES
+INSERT INTO program_languages VALUES
 (5,'Haskell','sudo apt-get install haskell-platform','Haskell 7.10.2-a','','runhaskell','','','.hs');
 
-INSERT INTO PROGRAM_LANGUAGES VALUES
+INSERT INTO program_languages VALUES
 (6,'Perl','sudo apt-get install perl','ActivePerl 5.20.2','','perl','','','.pl');
 
-INSERT INTO PROGRAM_LANGUAGES VALUES
+INSERT INTO program_languages VALUES
 (7,'Node.js','sudo apt-get install nodejs','Node.js 4.2.1','','node','','','.js');
 
-INSERT INTO PROGRAM_LANGUAGES VALUES
-(8,'#Bash','','','','','','','.js');
+INSERT INTO program_languages VALUES
+(8,'#Bash','','','','','','','');
 
-INSERT INTO USERS VALUES
+INSERT INTO users VALUES
 (1,'1234','mail@mail.ru','Petr_Ivan','Petrov','Ivan','89119876543','2015-9-20','2015-10-21');
 
-INSERT INTO USERS VALUES
+INSERT INTO users VALUES
 (2,'654321','my_mail@mgail.com','Cat123','Sidorova','Elena','89319873456','2015-9-25','2015-10-22');
 
-INSERT INTO USERS VALUES
+INSERT INTO users VALUES
 (3,'987654','Ivanov_Ojeg@yandex.ru','Olegg','Ivanov','Oleg','89055673489','2015-9-26','2015-10-22');
 
-INSERT INTO USERS VALUES
+INSERT INTO users VALUES
 (4,'76543','e-mail@rambler.ru','Alex337','Sedov','Alexey','89115674321','2015-9-21','2015-10-23');
 
-INSERT INTO USERS VALUES
+INSERT INTO users VALUES
 (5,'root','adminpg-mail@rambler.ru','Admin','Admin','Admin','89110000001','2015-9-1','2015-11-23');
 
-INSERT INTO TASKS VALUES
+INSERT INTO tasks VALUES
 (1,'The task of adding two numbers','You must write a program that adds two numbers.','2015-9-20',30,5);
 
-INSERT INTO TASKS VALUES
+INSERT INTO tasks VALUES
 (2,'The task of multiplying two numbers','You must write a program that multiplies two numbers.','2015-9-22',30,5);
 
-INSERT INTO SOLUTIONS VALUES
-(1,1,1,'2015-10-30 18:32:23',3,'import java.util.Scanner;
-public class main {
-public static void main(String[] args) {
-Scanner input = new Scanner(System.in);
-int a = input.nextInt();
-int b = input.nextInt();
-System.out.print(a+b);
-}
-}',211,'WAIT',435);
+INSERT INTO solutions VALUES
+(1,1,1,'2015-10-30 18:32:23',3,418,'WAIT',435);
 
-INSERT INTO SOLUTIONS VALUES
-(2,1,2,'2015-10-31 16:30:15',2,'#include <iostream>
-using namespace std;
-int main() {
-int a, b;
-cin >> a >> b;
-cout << a+b;
-return 0;
-}',110,'WAIT',564);
+INSERT INTO solutions VALUES
+(2,1,2,'2015-10-31 16:30:15',2,170,'WAIT',564);
 
-INSERT INTO SOLUTIONS VALUES
-(3,1,3,'2015-11-1 13:36:45',1,'#include <stdio.h>
-int main() {
-int a, b;
-scanf("%d", &a);
-scanf("%d", &b);
-printf("%d", a + b);
-return 0;
-}',115,'WAIT',232);
+INSERT INTO solutions VALUES
+(3,1,3,'2015-11-1 13:36:45',1,203,'WAIT',232);
 
-INSERT INTO SOLUTIONS VALUES
-(4,2,3,'2015-11-2 13:35:40',1,'#include <stdio.h>
-int main() {
-int a, b;
-scanf("%d", &a);
-scanf("%d", &b);
-printf("%d", a * b);
-return 0;
-}',115,'WAIT',232);
+INSERT INTO solutions VALUES
+(4,2,3,'2015-11-2 13:35:40',1,203,'WAIT',232);
 
-INSERT INTO TESTS VALUES
+INSERT INTO tests VALUES
 (1,1,'4 6','10',1);
 
-INSERT INTO TESTS VALUES
+INSERT INTO tests VALUES
 (2,1,'423 577','1000',1);
 
-INSERT INTO TESTS VALUES
+INSERT INTO tests VALUES
 (3,1,'17 33','50',1);
 
-INSERT INTO TESTS VALUES
+INSERT INTO tests VALUES
 (null,1,'27 73','100',1);
+
+INSERT INTO tests VALUES
+(null,2,'10 20','200',1);
+
+INSERT INTO tests VALUES
+(null,2,'15 15','225',1);
+
+INSERT INTO tests VALUES
+(null,2,'13 13','169',1);
