@@ -8,7 +8,9 @@ secondname varchar(20),
 firstname varchar(20),
 phone varchar (11) unique,
 registration_date date,
-last_visit date
+last_visit date,
+hashed_password varchar(100),
+salt float
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS tasks
