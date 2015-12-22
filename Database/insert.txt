@@ -36,7 +36,7 @@ INSERT INTO users VALUES
 (4,'76543','e-mail@rambler.ru','Alex337','Sedov','Alexey','89115674321','2015-9-21','2015-10-23','',null);
 
 INSERT INTO users VALUES
-(5,'root','adminpg-mail@rambler.ru','Admin','Admin','Admin','89110000001','2015-9-1','2015-11-23');
+(5,'root','adminpg-mail@rambler.ru','Admin','Admin','Admin','89110000001','2015-9-1','2015-11-23','',null);
 
 INSERT INTO tasks VALUES
 (1,'The task of adding two numbers','You must write a program that adds two numbers.','2015-9-20',30,5);
@@ -76,4 +76,3 @@ INSERT INTO tests VALUES
 
 INSERT INTO tests VALUES
 (null,2,'13 13','169',1);
-
