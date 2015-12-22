@@ -1,8 +1,8 @@
 var mysql      = require('mysql');
 var config = require('config');
+var log = require('../libs/log/log')(module);
 
 var connection = mysql.createConnection(config.get('dbConfig'));
-var log = require('../libs/log/log')(module);
 
 connection.connect(function(err)
 {
@@ -144,6 +144,10 @@ connection.query(sql1, function (err, result) {
   connection.query(sql,  function (err, result) {
   });
 });
+
+//--- Functions related to User table ---
+
+//---------------------------------------
 
 exports.getAllTasks = getAllTasks;
 exports.getAllUsers = getAllUsers;
