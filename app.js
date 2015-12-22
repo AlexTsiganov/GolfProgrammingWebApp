@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//--- Настройка сессий и кук ---
+//--- Sessions and cookie configuration ---
 var config = require('config');
 var session = require('express-session');
 var SessionStore = require('express-mysql-session');
@@ -47,7 +47,7 @@ app.use(session({
     store: new SessionStore(options)
 }));
 
-// Это код для тестирования кук. Пока пусть будет, позже удалю
+// Code for cookies testing. Will delete it sometime later. For now I need it.
 //app.use(function(req, res, next) {
 //    req.session.CountofVisits = req.session.CountofVisits + 1 || 1;
 //    log.info(req.session.CountofVisits);
