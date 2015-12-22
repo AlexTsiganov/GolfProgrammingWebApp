@@ -28,15 +28,17 @@ router.put('/solution', function (req, res, next)
 {
   log.info(req.body);
   var solution = req.body.solution;
-
+    var lang_id = solution.lang;
+    var code = solution.code;
   dataManager.getTask(req.body.taskID, function(task, langs, tests, error)
   {
     log.info("task: "+task.id);
-    solution.id = 1;
-    parseSolution(task, tests, solution, function (response) {
-      res.send(response);
-    })
-
+    dataManager.addSolution(task.id,5,lang_id, code, function(error, solution_id){
+        solution.id = solution_id;
+        parseSolution(task, tests, solution, function (response) {
+            res.send(response);
+        });
+    });
   });
 });
 

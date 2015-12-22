@@ -127,6 +127,17 @@ var getObjects = function(solution_id, cb) {
     });
 };
 
+var addSolution = function(task_id,user_id,program_language_id,code, cb) {
+    var createdate = new Date();
+    var points = 100;
+    connection.query("INSERT INTO solutions VALUES (null," + task_id.toString() + "," + user_id.toString() +
+        ",'" + createdate.toString()+ "'," + program_language_id.toString() + "," + "200" +
+        ",'WAIT', " + points.toString()+ ";",
+        function(error, solution) {
+            cb(error, solution);
+        });
+};
+
 var sql1 = "SET CHARACTER SET utf8";
 connection.query(sql1, function (err, result) {
   var sql = "SET SESSION collation_connection ='utf8_general_ci";
@@ -141,3 +152,4 @@ exports.getTask = getTask;
 exports.getTestByTaskID = getTestByTaskID;
 exports.getTop10Users = getTop10Users;
 exports.getObjects = getObjects;
+exports.addSolution = addSolution;
