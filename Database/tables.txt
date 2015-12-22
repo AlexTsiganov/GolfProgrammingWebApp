@@ -1,57 +1,56 @@
-CREATE TABLE IF NOT EXISTS USERS
+CREATE TABLE IF NOT EXISTS users
 (
-ID_USER int NOT NULL AUTO_INCREMENT primary key,
-PASSWORD varchar(25),
-EMAIL varchar(35) unique,
-NICKNAME varchar (25) unique,
-SECONDNAME varchar(20),
-FIRSTNAME varchar(20),
-PHONE varchar (11) unique,
-REGISTRATION_DATE date,
-LAST_VISIT date
+id int NOT NULL AUTO_INCREMENT primary key,
+password varchar(25),
+email varchar(35) unique,
+nickname varchar (25) unique,
+secondname varchar(20),
+firstname varchar(20),
+phone varchar (11) unique,
+registration_date date,
+last_visit date
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS TASKS
+CREATE TABLE IF NOT EXISTS tasks
 (
-ID_TASK int NOT NULL AUTO_INCREMENT primary key,
-TASKNAME varchar (50),
-TEXT varchar (5000),
-TASK_DATE date,
-TIMELIMIT int,
-AUTHOR int, FOREIGN KEY(AUTHOR) REFERENCES USERS(ID_USER)
+id int NOT NULL AUTO_INCREMENT primary key,
+name varchar (50),
+description varchar (5000),
+createdate date,
+timelimit int,
+author int, FOREIGN KEY(author) REFERENCES users(id)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS TESTS
+CREATE TABLE IF NOT EXISTS tests
 (
-ID_TEST int NOT NULL AUTO_INCREMENT primary key,
-ID_TASK int, FOREIGN KEY(ID_TASK) REFERENCES TASKS(ID_TASK),
-INPUT_DATA varchar (1000),
-OUTPUT_DATA varchar (1000),
-VISIBLE int
+id int NOT NULL AUTO_INCREMENT primary key,
+task_id int, FOREIGN KEY(task_id) REFERENCES tasks(id),
+input_data varchar (1000),
+output_data varchar (1000),
+visible int
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS PROGRAM_LANGUAGES
+CREATE TABLE IF NOT EXISTS program_languages
 (
-ID_PROGRAM_LANGUAGE int NOT NULL AUTO_INCREMENT primary key,
-LANGUAGE_NAME varchar (12),
-HOW_TO_INSTALL varchar (100),
-VERSION varchar (25),
-COMAND_TO_COMPILE varchar (100),
-COMAND_TO_EXEC varchar (50),
-COMPILER_OPTIONS varchar (10),
-EX_COMPILED_FILE varchar (6),
-EX_EXECUTABLE_FILE varchar (6)
+id int NOT NULL AUTO_INCREMENT primary key,
+name varchar (12),
+how_to_install varchar (100),
+version varchar (25),
+comand_to_compile varchar (100),
+comand_to_exec varchar (50),
+compiler_options varchar (10),
+ex_compiled_file varchar (6),
+ex_executable_file varchar (6)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS SOLUTIONS
+CREATE TABLE IF NOT EXISTS solutions
 (
-ID_SOLUTION int NOT NULL AUTO_INCREMENT primary key,
-SOLUTION_TASK_ID int, FOREIGN KEY(SOLUTION_TASK_ID) REFERENCES TASKS(ID_TASK),
-SOLUTION_USER_ID int, FOREIGN KEY(SOLUTION_USER_ID) REFERENCES USERS(ID_USER),
-SOLUTION_DATE timestamp,
-PROGRAM_LANGUAGE int, FOREIGN KEY(PROGRAM_LANGUAGE) REFERENCES PROGRAM_LANGUAGES(ID_PROGRAM_LANGUAGE),
-TEXT varchar (10000),
-LENGTH_CODE int,
-STATUS varchar (15),
-POINTS int
+id int NOT NULL AUTO_INCREMENT primary key,
+task_id int, FOREIGN KEY(task_id) REFERENCES tasks(id),
+user_id int, FOREIGN KEY(user_id) REFERENCES users(id),
+createdate timestamp,
+program_language int, FOREIGN KEY(program_language) REFERENCES program_languages(id),
+length_code int,
+status varchar (15),
+points int
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
