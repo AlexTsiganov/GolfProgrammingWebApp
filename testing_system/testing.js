@@ -41,7 +41,7 @@ TestSystem.prototype.testing = function testing(lang, task, test, solution, cb) 
     
     // take filename
     this.code = './tasks/' + task[0].id + '/solutions/' + 
-            solution[0].id + '/main';
+            solution[0].id + '/main'+lang[0].ex_executable_file;
     
     // take tests (input / output)
     this.tests = test;
