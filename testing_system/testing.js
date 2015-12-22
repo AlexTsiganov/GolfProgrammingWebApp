@@ -2,6 +2,7 @@
 var events = require('events');             // for events handling
 var exec = require('child_process').exec;   // for execute external code
 var fs = require('fs');                     // for work with files
+//var log = require('../libs/log.js')(module); // for logging
 
 // constructor of the class TestSystem
 var TestSystem = function TestSystem(){
@@ -30,10 +31,10 @@ var test_system = new TestSystem();
  */
 TestSystem.prototype.testing = function testing(lang, task, test, solution) {
     
-    //console.log('Test: ', test);
-    //console.log('Lang: ', lang);
-    //console.log('Task: ', task);
-    //console.log('Solution: ', solution);
+    //log.info('Test: ', test);
+    //log.info('Lang: ', lang);
+    //log.info('Task: ', task);
+    //log.info('Solution: ', solution);
     
     // take solution
     this.solution = solution;
@@ -69,7 +70,7 @@ TestSystem.prototype.writeInput = function writeInput(run) {
     });
 };
 test_system.on('inputIsWrited', function(run){
-    //console.log('input.txt is writed');
+    //log.info('input.txt is writed');
     this.writeEtalon(run);
 });
 
@@ -84,7 +85,7 @@ TestSystem.prototype.writeEtalon = function(run) {
     });
 };
 test_system.on('etalonIsWrited', function(run){
-    //console.log('etalon.txt is writed');
+    //log.info('etalon.txt is writed');
     this.execCode(run);
 });
 
@@ -98,9 +99,9 @@ TestSystem.prototype.execCode = function(run) {
     var solution = this.solution;
     exec(this.exec_command + ' ' + this.code + ' < input.txt > output.txt',
         function(error, stdout, stderr){
-            //console.log('error = ' + error + '\n');
-            //console.log('stdout = ' + stdout + '\n');
-            //console.log('strerr = ' + stderr + '\n');
+            //log.info('error = ' + error + '\n');
+            //log.info('stdout = ' + stdout + '\n');
+            //log.info('strerr = ' + stderr + '\n');
             if(stderr === '')
                 test_system.emit('codeIsExecuted', run);
             else {
@@ -116,7 +117,7 @@ TestSystem.prototype.execCode = function(run) {
     );
 };
 test_system.on('codeIsExecuted', function(run){
-    //console.log('code is executed');
+    //log.info('code is executed');
     this.compareFiles(run);
 });
 
@@ -130,9 +131,9 @@ TestSystem.prototype.compareFiles = function(run) {
     var solution = this.solution;
     exec('diff output.txt etalon.txt',
     function(error, stdout, stderr){
-        //console.log('error = ' + error + '\n');
-        //console.log('stdout = ' + stdout + '\n');
-        //console.log('strerr = ' + stderr + '\n');
+        //log.info('error = ' + error + '\n');
+        //log.info('stdout = ' + stdout + '\n');
+        //log.info('strerr = ' + stderr + '\n');
         if(stdout === '')
             test_system.emit('filesAreCompared', run);
         else {
@@ -147,7 +148,7 @@ TestSystem.prototype.compareFiles = function(run) {
     });
 };
 test_system.on('filesAreCompared', function(run){
-    //console.log('files are compared');
+    //log.info('files are compared');
     var solution = this.solution;
     // start next test
     run++;

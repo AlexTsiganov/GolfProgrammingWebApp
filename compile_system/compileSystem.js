@@ -3,15 +3,17 @@ var fs = require('fs');
 var exec = require("child_process").exec;
 var eventEmitter = new events.EventEmitter();
 
+//var log = require('../libs/log.js')(module);
+
 function compileSystem(task, langInfo, solution, cb) {
     var PATH = "../tasks/" + task[0].ID_TASK + "/solutions/" + 
             solution[0].ID_SOLUTION + "/";
     var outputFile = PATH + "results.txt";
     var fileName = 'main';
-    //console.log('langInfo: '+ langInfo);			
+    //log.info('langInfo: '+ langInfo);			
     if(langInfo[0].COMAND_TO_COMPILE != '') {
         if(langInfo[0].COMPILER_OPTIONS != '') {
-            //console.log(langInfo[0].COMAND_TO_COMPILE + ' ' + PATH + fileName + 
+            //log.info(langInfo[0].COMAND_TO_COMPILE + ' ' + PATH + fileName + 
             //        langInfo[0].EX_COMPILED_FILE + ' ' + 
             //        langInfo[0].COMPILER_OPTIONS + ' ' + PATH + fileName);
             exec(langInfo[0].COMAND_TO_COMPILE + ' ' + PATH + fileName + 
@@ -21,7 +23,7 @@ function compileSystem(task, langInfo, solution, cb) {
                         eventEmitter.emit('readyToExec', cb);
                     });				
         } else {
-            //console.log('no options');
+            //log.info('no options');
             exec(langInfo[0].COMAND_TO_COMPILE + " " + PATH + fileName + 
                     langInfo[0].EX_COMPILED_FILE + " 2>" + PATH + 
                     "compilelog.txt", function(err, stdout, stderr){
@@ -29,7 +31,7 @@ function compileSystem(task, langInfo, solution, cb) {
                     });	
         }					
     } else {
-        //console.log('no compiler');
+        //log.info('no compiler');
         eventEmitter.emit('readyToExec', cb);	
     }
 }
@@ -40,6 +42,6 @@ eventEmitter.on('readyToExec', function(cb){
 
 //example of use compileSystem function
 /*compileSystem(1,tmp,1, function(rd){
-	console.log(rd);
+	log.info(rd);
 });*/
 module.exports = compileSystem; 

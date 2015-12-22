@@ -2,6 +2,7 @@ var mysql      = require('mysql');
 var config = require('config');
 
 var connection = mysql.createConnection(config.get('dbConfig'));
+var log = require('../libs/log.js')(module);
 
 connection.connect(function(err)
 {
@@ -10,14 +11,14 @@ connection.connect(function(err)
     return;
   }
 
-  console.log('MySQL connected as id ' + connection.threadId);
+  log.info('MySQL connected as id ' + connection.threadId);
 },charset='utf8', init_command='SET NAMES UTF8');
 
 
 var getAllTasks = function(cb) {
   connection.query("SELECT ID_TASK,TASKNAME,NICKNAME FROM TASKS, USERS where AUTHOR = ID_USER", function(err, rows, fields)
   {
-    console.log('Rows ', rows);
+    log.info('Rows ', rows);
     cb(rows, err);
   });
 };
@@ -25,7 +26,7 @@ var getAllTasks = function(cb) {
 var getAllUsers = function(cb) {
   connection.query("SELECT * FROM users", function(err, rows, fields)
   {
-    console.log('Rows ', rows);
+    log.info('Rows ', rows);
     cb(rows, err);
   });
 };
@@ -34,7 +35,7 @@ var getTestByTaskID = function(taskID, cb)
 {
   connection.query("SELECT * FROM TESTS where ID_TASK = ? ",taskID, function(err, rows, fields)
   {
-    console.log('Rows ', rows);
+    log.info('Rows ', rows);
     cb(rows, err);
   });
 };
@@ -42,7 +43,7 @@ var getTestByTaskID = function(taskID, cb)
 var getAllProgramlangs = function(cb) {
   connection.query("SELECT ID_PROGRAM_LANGUAGE, LANGUAGE_NAME FROM PROGRAM_LANGUAGES", function(err, rows, fields)
   {
-    console.log('Rows ', rows);
+    log.info('Rows ', rows);
     cb(rows, err);
   });
 };
@@ -54,7 +55,7 @@ var getTop10Users = function(cb) {
       "order by sum(POINTS)) group by ID_USER,NICKNAME order" +
       " by sum(POINTS) desc;", function(err, rows, fields)
   {
-    console.log('Rows ', rows);
+    log.info('Rows ', rows);
     cb(rows, err);
   });
 };
