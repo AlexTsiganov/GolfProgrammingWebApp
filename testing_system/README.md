@@ -1,4 +1,4 @@
-###Here is the testing system for ProgrammingGolf project:
+### Here is the testing system for ProgrammingGolf project:
 
 File `testing.js` contains description of class TestSystem with main function `testing()`.
 
@@ -6,18 +6,18 @@ Folder `mock data` contains examples of client's programs.
 
 ***
 
-###Main function:
+### Main function:
 
 `testing(lang, task, test, solution)`
 
-####Arguments:
+#### Arguments:
 
 1. `lang` - object that contains data from table "PROGRAM_LANGUAGES".
 2. `task` - object that contains data from table "TASKS".
 3. `test` - object that contains data from table "TESTS".
 4. `solution` - object that contains data from table "SOLUTIONS".
 
-####Returns:
+#### Returns:
 
 generate events with object that contains information about test process:
 
@@ -34,7 +34,7 @@ fields of response object:
 
 ***
 
-###Algorithm:
+### Algorithm:
 
 1. Write tests to files (input data to `input.txt` / output data to `etalon.txt`).
 2. Run the user's code like `programm.exe < input.txt > output.txt`.

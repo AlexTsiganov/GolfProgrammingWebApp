@@ -1,6 +1,6 @@
-###Hello NodeJS Golf Programming v.1.0.0
+### Hello NodeJS Golf Programming v.1.0.0
 
-#[Golf programming](http://ec2-54-173-174-148.compute-1.amazonaws.com)
+# [Golf programming](http://ec2-54-173-174-148.compute-1.amazonaws.com)
 
 Amazon Web service EC2 ubuntu
   Public DNS: [ec2-54-173-174-148.compute-1.amazonaws.com](http://ec2-54-173-174-148.compute-1.amazonaws.com)
@@ -23,7 +23,7 @@ If you would like to download the code and try it for yourself:
 
 ***
 
-###Building project on cloud:
+### Building project on cloud:
 
 1. Switch to local **deploy** branch: `git checkout deploy`
 2. Commit your last changes to deploy branch or **merge with master**
@@ -32,7 +32,7 @@ If you would like to download the code and try it for yourself:
 
 ***
 
-###Connect to AWS EC2 cloud:
+### Connect to AWS EC2 cloud:
 
 1. Copy GolfProgramming.pem to folder `ws ec2 access`
 2. Connect to cloud via bash/ec2-cloud without params: `./bash/ec2-cloud` (default user: *ubuntu*)
@@ -44,7 +44,7 @@ If you would like to download the code and try it for yourself:
 
 ***
 
-###Access to MySQL database:
+### Access to MySQL database:
 
 **Be very careful with the editing database; errors can lead to data loss**
 
@@ -55,7 +55,7 @@ If you would like to download the code and try it for yourself:
 
 ***
 
-###Development:
+### Development:
 
 export NODE_ENV=production
 echo export NODE_ENV=production >> ~/.bash_profile
