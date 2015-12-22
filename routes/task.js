@@ -4,7 +4,7 @@ var dataManager = require('../Database/DataManager');
 var exec = require('child_process').exec;
 var fs = require('fs');
 var mkdirp = require('mkdirp');
-var log = require('../libs/log.js')(module);
+var log = require('../libs/log/log')(module);
 
 router.get('/:id', function(req, res, next)
 {

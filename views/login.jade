@@ -3,7 +3,19 @@ extends layout
 block content
 
 	#container
+		h1 Регистрация и вход
+		p Введите имя пользователя и пароль. Если такого пользователя не существует - он будет создан.
+
 		form.form-signin(action="/login", method="post")
-			input.form-control(id='inputEmail' type="email", name="email", placeholder="Email address")
-			input.form-control(type="password", name="password", placeholder="Password")
-			button.btn.btn-lg.btn-primary.btn-block(type="submit") Sign in
+			div.form-group
+				label.col-lg-2.control-label(for="input-username") Имя
+				div.col-lg-10
+					input.form-control(id='input-username' type="text",  name="usernmae", placeholder="Имя пользователя")
+			div.form-group
+				label.col-lg-2.control-label(for="input-password") Пароль
+				div.col-lg-10
+					input.form-control(id='input-password', type="password", name="password", placeholder="Пароль")
+			div.form-group
+				div.ol-lg-offset-2.col-lg-10
+					button.btn.btn-lg.btn-primary.btn-block(type="submit", data-loading-text="Отправляю...") Войти
+
