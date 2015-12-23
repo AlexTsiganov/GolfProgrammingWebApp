@@ -57,57 +57,46 @@ function JSONResponseWithError(error)
   return response;
 }
 
-function parseSolution(task, tests, solution, cb)
-{
-  writeSolutionToFile(solution, task, function (path_to_code)
-  {
-    if (solution.lang != 8)
-    {
-      // вот тут вызывать функции компиляции\тестиования
-      var response = new Object();
-      response.status = 'success';
-      response.message = 'вот тут вызывать функции компиляции\тестиования';
-
-      // dataManager.getObjects(solution.id, function(error, Test, Lang, Task, Solution) {
-      //
-      //     // call compiling function
-      //     compile_system(Task, Lang, Solution, function(t){
-      //         log.info(t);
-      //         // call testing function
-      //         test_system.testing(Lang, Task, Test, Solution);
-      //     });
-      //
-      // });
-      cb(response);
-    }
-    else
-    {
-      //bash_compile(task, tests, solution, cb);
-      cb(emptyJSONResponse());
-    }
-  });
+function parseSolution(task, tests, solution, cb) {
+	writeSolutionToFile(solution, task, function (path_to_code)
+	{
+		if (solution.lang != 8) {
+			dataManager.getObjects(solution.id, function(error, Test, Lang, Task, Solution) {
+				// call compiling function
+				compile_system(Task, Lang, Solution, function(res){
+					// call testing function
+					test_system.testing(Lang, Task, Test, Solution, cb);
+				});
+			});
+		}
+		else
+		{
+		  //bash_compile(task, tests, solution, cb);
+		  cb(emptyJSONResponse());
+		}
+	});
 }
 
 // events handling for testing function
-test_system.on('runtimeError', function(res) {
-    log.info(res.id_solution);           // id of checked solution
-    log.info(res.result);                // result of testing
-    log.info(res.error_log);             // log of the error
-    log.info(res.number_of_fail_test);   // number of failed test
+test_system.on('runtimeError', function(res, cb){
+	var response = new Object();
+	response.status = 'error';
+    response.message = 'Runtime Error';
+	cb(response);
 });
 
-test_system.on('testFailed', function(res) {
-    log.info(res.id_solution);           // id of checked solution
-    log.info(res.result);                // result of testing
-    log.info(res.error_log);             // log of the error
-    log.info(res.number_of_fail_test);   // number of failed test
+test_system.on('testFailed', function(res, cb){
+	var response = new Object();
+    response.status = 'error';
+    response.message = 'Test #' + res.number_of_fail_test + ' is fail';
+	cb(response);
 });
 
-test_system.on('success', function(res){
-    log.info(res.id_solution);           // id of checked solution
-    log.info(res.result);                // result of testing
-    log.info(res.error_log);             // log of the error
-    log.info(res.number_of_fail_test);   // number of failed test
+test_system.on('success', function(res, cb){
+	var response = new Object();
+    response.status = 'success';
+    response.message = 'OK!';
+	cb(response);
 });
 
 function writeSolutionToFile(solution, task, cb)
