@@ -25,23 +25,20 @@ router.get('/:id', function(req, res, next)
     });
 });
 
-
-router.put('/solution', function (req, res, next)
-{
-  log.info(req.body);
-  var solution = req.body.solution;
+router.put('/solution', function (req, res, next) {
+	log.info(req.body);
+	var solution = req.body.solution;
     var lang_id = solution.lang;
     var code = solution.code;
-  dataManager.getTask(req.body.taskID, function(task, langs, tests, error)
-  {
-    log.info("task: "+task.id);
-    dataManager.addSolution(task.id,5,lang_id, code, function(error, solution_id){
-        solution.id = solution_id;
-        parseSolution(task, tests, solution, function (response) {
-            res.send(response);
-        });
-    });
-  });
+	dataManager.getTask(req.body.taskID, function(task, langs, tests, error){ 
+		log.info("task: "+task.id);
+		dataManager.addSolution(task.id, 5, lang_id, code, function(error, solution_id) {
+			solution.id = solution_id.insertId;
+			parseSolution(task, tests, solution, function (response) {
+				res.send(response);
+			});
+		});
+	});
 });
 
 function emptyJSONResponse()
@@ -60,57 +57,46 @@ function JSONResponseWithError(error)
   return response;
 }
 
-function parseSolution(task, tests, solution, cb)
-{
-  writeSolutionToFile(solution, task, function (path_to_code)
-  {
-    if (solution.lang != 8)
-    {
-      // вот тут вызывать функции компиляции\тестиования
-      var response = new Object();
-      response.status = 'success';
-      response.message = 'вот тут вызывать функции компиляции\тестиования';
-
-      // dataManager.getObjects(solution.id, function(error, Test, Lang, Task, Solution) {
-      //
-      //     // call compiling function
-      //     compile_system(Task, Lang, Solution, function(t){
-      //         log.info(t);
-      //         // call testing function
-      //         test_system.testing(Lang, Task, Test, Solution);
-      //     });
-      //
-      // });
-      cb(response);
-    }
-    else
-    {
-      //bash_compile(task, tests, solution, cb);
-      cb(emptyJSONResponse());
-    }
-  });
+function parseSolution(task, tests, solution, cb) {
+	writeSolutionToFile(solution, task, function (path_to_code)
+	{
+		if (solution.lang != 8) {
+			dataManager.getObjects(solution.id, function(error, Test, Lang, Task, Solution) {
+				// call compiling function
+				compile_system(Task, Lang, Solution, function(res){
+					// call testing function
+					test_system.testing(Lang, Task, Test, Solution, cb);
+				});
+			});
+		}
+		else
+		{
+		  //bash_compile(task, tests, solution, cb);
+		  cb(emptyJSONResponse());
+		}
+	});
 }
 
 // events handling for testing function
-test_system.on('runtimeError', function(res) {
-    log.info(res.id_solution);           // id of checked solution
-    log.info(res.result);                // result of testing
-    log.info(res.error_log);             // log of the error
-    log.info(res.number_of_fail_test);   // number of failed test
+test_system.on('runtimeError', function(res, cb){
+	var response = new Object();
+	response.status = 'error';
+    response.message = 'Runtime Error';
+	cb(response);
 });
 
-test_system.on('testFailed', function(res) {
-    log.info(res.id_solution);           // id of checked solution
-    log.info(res.result);                // result of testing
-    log.info(res.error_log);             // log of the error
-    log.info(res.number_of_fail_test);   // number of failed test
+test_system.on('testFailed', function(res, cb){
+	var response = new Object();
+    response.status = 'error';
+    response.message = 'Test #' + res.number_of_fail_test + ' is fail';
+	cb(response);
 });
 
-test_system.on('success', function(res){
-    log.info(res.id_solution);           // id of checked solution
-    log.info(res.result);                // result of testing
-    log.info(res.error_log);             // log of the error
-    log.info(res.number_of_fail_test);   // number of failed test
+test_system.on('success', function(res, cb){
+	var response = new Object();
+    response.status = 'success';
+    response.message = 'OK!';
+	cb(response);
 });
 
 function writeSolutionToFile(solution, task, cb)
@@ -121,12 +107,12 @@ function writeSolutionToFile(solution, task, cb)
         throw err;
     }
 
-    fs.writeFile(path_to_code+'/main', solution.code, function(err) {
+    fs.writeFile(path_to_code+'/sourcefile', solution.code, function(err) {
       if (err) {
           throw err;
       }
-        fs.chmodSync(path_to_code+'/main', 0755);
-        cb(path_to_code+'/main');
+        fs.chmodSync(path_to_code+'/sourcefile', 0755);
+        cb(path_to_code+'/sourcefile');
     });
   });
 }

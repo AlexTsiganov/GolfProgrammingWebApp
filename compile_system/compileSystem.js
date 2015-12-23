@@ -6,7 +6,7 @@ var eventEmitter = new events.EventEmitter();
 //var log = require('../libs/log.js')(module);
 
 function compileSystem(task, langInfo, solution, cb) {
-	var PATH = "../tasks/" + task[0].id + "/solutions/" + 
+	var PATH = "./tasks/" + task[0].id + "/solutions/" + 
 		    solution[0].id + "/";	
 	console.log(langInfo);
 	exec('cp '+PATH+'sourcefile '+PATH+ 'main'+langInfo[0].ex_compiled_file, function (err, stdout,stderr){
@@ -50,7 +50,7 @@ eventEmitter.on('readyToExec', function(cb, res){
 
 function isCorrectCompilation(task, solution, cb) {
 	//Тут нужно уточнить, сколько точек в пути указывать.
-	fs.readFile('../tasks/' + task[0].id + "/solutions/" + solution[0].id + "/compilelog.txt", 
+	fs.readFile('./tasks/' + task[0].id + "/solutions/" + solution[0].id + "/compilelog.txt", 
 		{encoding: 'utf8'}, function (err, data) {
 		if (err) throw err;
 		var logArr = data.split(' ');

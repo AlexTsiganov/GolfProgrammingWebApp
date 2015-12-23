@@ -29,7 +29,7 @@ var test_system = new TestSystem();
  * @param {type} test - data from table "TESTS".
  * @param {type} solution - data from table "SOLUTIONS".
  */
-TestSystem.prototype.testing = function testing(lang, task, test, solution) {
+TestSystem.prototype.testing = function testing(lang, task, test, solution, cb) {
     
     //log.info('Test: ', test);
     //log.info('Lang: ', lang);
@@ -40,23 +40,23 @@ TestSystem.prototype.testing = function testing(lang, task, test, solution) {
     this.solution = solution;
     
     // take filename
-    this.code = '../tasks/' + task[0].ID_TASK + '/solutions/' + 
-            solution[0].ID_SOLUTION + '/main';
+    this.code = './tasks/' + task[0].id + '/solutions/' + 
+            solution[0].id + '/main';
     
     // take tests (input / output)
     this.tests = test;
 
     // take command to exec code
-    this.exec_command = lang[0].COMAND_TO_EXEC;
+    this.exec_command = lang[0].comand_to_exec;
     
     // take timelimit for current task
-    this.timelimit = task.TIMELIMIT;
+    this.timelimit = task[0].timelimit;
     
     // take number of tests
     this.n_tests = Object.keys(test).length;
 
     // start test with 1st test case
-    this.writeInput(1);
+    this.writeInput(1, cb);
 };
 
 /**
@@ -64,14 +64,14 @@ TestSystem.prototype.testing = function testing(lang, task, test, solution) {
  * the event 'inputIsWrited'. This event calls the function writeEtalon().
  * @param {type} run - number of current test case (1, 2, 3, ...).
  */
-TestSystem.prototype.writeInput = function writeInput(run) {
-    fs.writeFile('input.txt', this.tests[run-1].INPUT_DATA, function(){
-	test_system.emit('inputIsWrited', run);
+TestSystem.prototype.writeInput = function writeInput(run, cb) {
+    fs.writeFile('input.txt', this.tests[run-1].input_data, function(){
+	test_system.emit('inputIsWrited', run, cb);
     });
 };
-test_system.on('inputIsWrited', function(run){
+test_system.on('inputIsWrited', function(run, cb){
     //log.info('input.txt is writed');
-    this.writeEtalon(run);
+    this.writeEtalon(run, cb);
 });
 
 /**
@@ -79,14 +79,14 @@ test_system.on('inputIsWrited', function(run){
  * the event 'etalonIsWrited'. This event calls the function execCode().
  * @param {type} run - number of current test case (1, 2, 3, ...).
  */
-TestSystem.prototype.writeEtalon = function(run) {
-    fs.writeFile('etalon.txt', this.tests[run-1].OUTPUT_DATA, function(){
-	test_system.emit('etalonIsWrited', run);
+TestSystem.prototype.writeEtalon = function(run, cb) {
+    fs.writeFile('etalon.txt', this.tests[run-1].output_data, function(){
+	test_system.emit('etalonIsWrited', run, cb);
     });
 };
-test_system.on('etalonIsWrited', function(run){
+test_system.on('etalonIsWrited', function(run, cb){
     //log.info('etalon.txt is writed');
-    this.execCode(run);
+    this.execCode(run, cb);
 });
 
 /**
@@ -95,7 +95,7 @@ test_system.on('etalonIsWrited', function(run){
  * the event 'codeIsExecuted' and calls the function compareFiles().
  * @param {type} run - number of current test case (1, 2, 3, ...).
  */
-TestSystem.prototype.execCode = function(run) {
+TestSystem.prototype.execCode = function(run, cb) {
     var solution = this.solution;
     exec(this.exec_command + ' ' + this.code + ' < input.txt > output.txt',
         function(error, stdout, stderr){
@@ -103,22 +103,22 @@ TestSystem.prototype.execCode = function(run) {
             //log.info('stdout = ' + stdout + '\n');
             //log.info('strerr = ' + stderr + '\n');
             if(stderr === '')
-                test_system.emit('codeIsExecuted', run);
+                test_system.emit('codeIsExecuted', run, cb);
             else {
                 var res = {
-                    id_solution: solution[0].ID_SOLUTION,
+                    id_solution: solution[0].id,
                     result: 'runtime error',
                     error_log: error,
                     number_of_fail_test: run
                 };
-                test_system.emit('runtimeError', res);
+                test_system.emit('runtimeError', res, cb);
             }
         }
     );
 };
-test_system.on('codeIsExecuted', function(run){
+test_system.on('codeIsExecuted', function(run, cb){
     //log.info('code is executed');
-    this.compareFiles(run);
+    this.compareFiles(run, cb);
 });
 
 /**
@@ -127,41 +127,41 @@ test_system.on('codeIsExecuted', function(run){
  * Else function generates the event 'filesAreCompared' and starts new test.
  * @param {type} run - number of current test case (1, 2, 3, ...).
  */
-TestSystem.prototype.compareFiles = function(run) {
+TestSystem.prototype.compareFiles = function(run, cb) {
     var solution = this.solution;
-    exec('diff output.txt etalon.txt',
+    exec('diff --ignore-all-space output.txt etalon.txt',
     function(error, stdout, stderr){
         //log.info('error = ' + error + '\n');
         //log.info('stdout = ' + stdout + '\n');
         //log.info('strerr = ' + stderr + '\n');
         if(stdout === '')
-            test_system.emit('filesAreCompared', run);
+            test_system.emit('filesAreCompared', run, cb);
         else {
             var res = {
-                id_solution: solution[0].ID_SOLUTION,
+                id_solution: solution[0].id,
                 result: 'test failed',
                 error_log: '',
                 number_of_fail_test: run
             };
-            test_system.emit('testFailed', res);
+            test_system.emit('testFailed', res, cb);
         }
     });
 };
-test_system.on('filesAreCompared', function(run){
+test_system.on('filesAreCompared', function(run, cb){
     //log.info('files are compared');
     var solution = this.solution;
     // start next test
     run++;
     if(run <= this.n_tests)
-        this.writeInput(run);
+        this.writeInput(run, cb);
     else {
         var res = {
-            id_solution: solution[0].ID_SOLUTION,
+            id_solution: solution[0].id,
             result: 'success',
             error_log: '',
             number_of_fail_test: ''
         };
-        test_system.emit('success', res);
+        test_system.emit('success', res, cb);
     }
 });
 
