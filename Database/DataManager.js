@@ -145,7 +145,7 @@ connection.query(sql1, function (err, result) {
   });
 });
 
-//--- Functions related to User table ---
+//--- Functions related to User table and login/logout---
 var HttpError = require('../libs/errors/HttpError');
 
 var writeUser = function(name, salt, hashed_pass, callback) {
@@ -166,8 +166,15 @@ var writeUser = function(name, salt, hashed_pass, callback) {
     });
 };
 
+var getUser = function(name, callback) {
+    connection.query("SELECT nickname, salt, hashed_password FROM USERS WHERE nickname='" + name + "';",
+        callback);
+};
+
+
 
 exports.writeUser = writeUser;
+exports.getUser = getUser;
 //---------------------------------------
 
 exports.getAllTasks = getAllTasks;
