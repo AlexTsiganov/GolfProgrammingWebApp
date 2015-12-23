@@ -107,12 +107,12 @@ function writeSolutionToFile(solution, task, cb)
         throw err;
     }
 
-    fs.writeFile(path_to_code+'/main', solution.code, function(err) {
+    fs.writeFile(path_to_code+'/sourcefile', solution.code, function(err) {
       if (err) {
           throw err;
       }
-        fs.chmodSync(path_to_code+'/main', 0755);
-        cb(path_to_code+'/main');
+        fs.chmodSync(path_to_code+'/sourcefile', 0755);
+        cb(path_to_code+'/sourcefile');
     });
   });
 }
