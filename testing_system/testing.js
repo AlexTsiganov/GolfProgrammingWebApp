@@ -129,7 +129,7 @@ test_system.on('codeIsExecuted', function(run, cb){
  */
 TestSystem.prototype.compareFiles = function(run, cb) {
     var solution = this.solution;
-    exec('diff output.txt etalon.txt',
+    exec('diff --ignore-all-space output.txt etalon.txt',
     function(error, stdout, stderr){
         //log.info('error = ' + error + '\n');
         //log.info('stdout = ' + stdout + '\n');
