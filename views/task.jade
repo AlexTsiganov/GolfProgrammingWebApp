@@ -69,7 +69,7 @@ block content
     $(document).ready(function()
     {
       console.log("start");
-      $("input[name=langs][value='#{langs[2].id}']").prop('checked', true);
+      $("input[name=langs][value='#{langs[1].id}']").prop('checked', true);
       $('#send').click(function() {
         var code = $('#code').val();
         var _lang = $('input[name=langs]:checked').val();

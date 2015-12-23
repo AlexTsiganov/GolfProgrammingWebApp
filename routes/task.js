@@ -18,9 +18,12 @@ router.get('/:id', function(req, res, next)
         }
         dataManager.getSolutionsByTaskID(task.id, function(error, solutions) {
 
-          for (var solution in solutions) {
-            solution.code = "code";
+          for (var i = 0; i < solutions.length; i++) {
+            ///Users/alextsiganov/Documents/Projects/Golf Programming/tasks/1/solutions/33
+            solutions[i].code = fs.readFileSync('/Users/alextsiganov/Documents/Projects/Golf Programming/tasks/'+task.id+'/solutions/'+solutions[i].id+'/sourcefile').toString();
           }
+
+
 
           res.render('task', {
               task: task,
