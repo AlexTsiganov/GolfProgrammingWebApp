@@ -9,10 +9,12 @@ block content
 		form.form-signin(name="login-form", action="/login", method="post")
 			div.form-group
 				label.col-lg-2.control-label(for="input-username") Имя
+				br
 				div.col-lg-10
 					input.form-control(id='input-username' type="text",  name="username", placeholder="Имя пользователя")
 			div.form-group
 				label.col-lg-2.control-label(for="input-password") Пароль
+				br
 				div.col-lg-10
 					input.form-control(id='input-password', type="password", name="password", placeholder="Пароль")
 			div.form-group
@@ -39,6 +41,7 @@ block content
 						window.location.href = "/";
 					},
 					403: function(jqXHR) {
+						console.log(jqXHR.responseText);
 						var error = JSON.parse(jqXHR.responseText);
 						$('.error', form).html(error.message);
 					}
