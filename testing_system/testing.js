@@ -30,28 +30,28 @@ var test_system = new TestSystem();
  * @param {type} solution - data from table "SOLUTIONS".
  */
 TestSystem.prototype.testing = function testing(lang, task, test, solution, cb) {
-    
+
     //log.info('Test: ', test);
     //log.info('Lang: ', lang);
     //log.info('Task: ', task);
     //log.info('Solution: ', solution);
-    
+
     // take solution
     this.solution = solution;
-    
+
     // take filename
-    this.code = './tasks/' + task[0].id + '/solutions/' + 
+    this.code = './tasks/' + task[0].id + '/solutions/' +
             solution[0].id + '/main'+lang[0].ex_executable_file;
-    
+
     // take tests (input / output)
     this.tests = test;
 
     // take command to exec code
     this.exec_command = lang[0].comand_to_exec;
-    
+
     // take timelimit for current task
     this.timelimit = task[0].timelimit;
-    
+
     // take number of tests
     this.n_tests = Object.keys(test).length;
 
@@ -60,7 +60,7 @@ TestSystem.prototype.testing = function testing(lang, task, test, solution, cb) 
 };
 
 /**
- * Function for write input test in file. Completion of the function generates 
+ * Function for write input test in file. Completion of the function generates
  * the event 'inputIsWrited'. This event calls the function writeEtalon().
  * @param {type} run - number of current test case (1, 2, 3, ...).
  */
@@ -75,7 +75,7 @@ test_system.on('inputIsWrited', function(run, cb){
 });
 
 /**
- * Function for write output test in file. Completion of the function generates 
+ * Function for write output test in file. Completion of the function generates
  * the event 'etalonIsWrited'. This event calls the function execCode().
  * @param {type} run - number of current test case (1, 2, 3, ...).
  */
@@ -122,7 +122,7 @@ test_system.on('codeIsExecuted', function(run, cb){
 });
 
 /**
- * Function for compare result of client's code and etalon data. 
+ * Function for compare result of client's code and etalon data.
  * If files are not the same, then function generates error event 'testFailed'.
  * Else function generates the event 'filesAreCompared' and starts new test.
  * @param {type} run - number of current test case (1, 2, 3, ...).

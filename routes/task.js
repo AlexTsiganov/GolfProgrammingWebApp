@@ -16,13 +16,21 @@ router.get('/:id', function(req, res, next)
         if (error) {
             throw error;
         }
+        dataManager.getSolutionsByTaskID(task.id, function(error, solutions) {
 
-        res.render('task', {
-            task: task,
-            langs: langs,
-            tests: test,
-            username: req.session.username
+          for (var solution in solutions) {
+            solution.code = "code";
+          }
+
+          res.render('task', {
+              task: task,
+              langs: langs,
+              tests: test,
+              username: req.session.username,
+              solutions: solutions
+          });
         });
+
     });
 });
 
@@ -31,7 +39,7 @@ router.put('/solution', function (req, res, next) {
 	var solution = req.body.solution;
     var lang_id = solution.lang;
     var code = solution.code;
-	dataManager.getTask(req.body.taskID, function(task, langs, tests, error){ 
+	dataManager.getTask(req.body.taskID, function(task, langs, tests, error){
 		log.info("task: "+task.id);
 		dataManager.addSolution(task.id, 5, lang_id, code, function(error, solution_id) {
 			solution.id = solution_id.insertId;
@@ -72,8 +80,8 @@ function parseSolution(task, tests, solution, cb) {
 		}
 		else
 		{
-		  //bash_compile(task, tests, solution, cb);
-		  cb(emptyJSONResponse());
+		  bash_compile(task, tests, solution, cb);
+		  //cb(emptyJSONResponse());
 		}
 	});
 }
@@ -122,24 +130,11 @@ function writeSolutionToFile(solution, task, cb)
 
 function bash_compile(task, tests, solution, cb)
 {
-  mkdirp("tmp/tasks/"+task.id, function(err) {
-    if (err) {
-        throw err;
-    }
-    fs.writeFile('tmp/tasks/'+task.ID_TASK+'/solution', solution.code, function(err) {
-        if(err)
-        {
-            cb(response);
-            return log.info(err);
-        }
-        fs.chmodSync('./tmp/tasks/'+task.ID_TASK+'/solution', 0755);
-        log.info("The file was saved!");
-        log.info("tCount: "+ tests.length);
-        checkTests(task, tests, solution, response, cb, 0);
-
-    });
-
-});
+  var response = new Object();
+  response.status = "error";
+  log.info("The file was saved!");
+  log.info("tCount: "+ tests.length);
+  checkTests(task, tests, solution, response, cb, 0);
 }
 
 function checkTests(task, tests, solution, response, cb, indexTest)
@@ -147,11 +142,12 @@ function checkTests(task, tests, solution, response, cb, indexTest)
 
   var test = tests[indexTest];
   log.info(test);
-  exec('./tmp/tasks/'+task.ID_TASK+'/solution '+test.INPUT_DATA, function (err, stdout, stderr) {
+  //./tmp/tasks/'+task.id+'/solution/'+solution.id+'/main'
+  exec('./tasks/'+task.id+'/solution/'+solution.id+'/sourcefile '+test.input_data, function (err, stdout, stderr) {
       log.info('stdout='+stdout.toString());
       log.info(stderr);
-      log.info('out='+test.OUTPUT_DATA.toString());
-      var ver_status = parseInt(stdout,10) == test.OUTPUT_DATA;
+      log.info('out='+test.output_data.toString());
+      var ver_status = parseInt(stdout,10) == test.output_data;
       response.status = (ver_status && response.status == 'success')?'success':'error';
       if (ver_status)
       {

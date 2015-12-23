@@ -49,7 +49,11 @@ var getAllProgramLangs = function(cb) {
 };
 
 var getTop10Users = function(cb) {
-  connection.query("select * from (select use1.id as ID_USER,nickname,COUNT(sol1.id) as CNT,sum(points) as SUMPOINTS from users as use1,solutions as sol1 where user_id=use1.id and use1.id in  (select user_id from solutions group by user_id order by sum(points)) group by use1.id,nickname order by sum(points) desc) as userses left join (select user_id as ID_USER, name as LAST_TASK, tas2.id  from tasks as tas2, (select user_id, task_id, createdate from solutions as a where createdate = (select max(createdate)from solutions as b where a.user_id = b.user_id)) as dates where task_id=tas2.id  and tas2.id  in (select task_id from solutions group by user_id)) as taskses using (ID_USER);", function(err, rows, fields)
+  connection.query("select users.id,nickname,COUNT(solutions.id) as count,sum(points) as total" +
+        " from users,solutions where users.id=user_id and users.id " +
+        "in (select user_id from solutions group by user_id " +
+        "order by sum(points)) group by users.id,nickname order" +
+        " by sum(points) desc", function(err, rows, fields)
   {
     log.info('Rows ', rows);
     cb(rows, err);
@@ -103,6 +107,13 @@ var getSolutionObject = function(solution_id, cb) {
     });
 };
 
+var getSolutionsByTaskID = function(task_id, cb) {
+    connection.query("SELECT * FROM solutions where task_id = ?",
+            task_id, function(error, solution) {
+        cb(error, solution);
+    });
+};
+
 var getObjects = function(solution_id, cb) {
     var Test = null;
     var Lang = null;
@@ -125,13 +136,15 @@ var getObjects = function(solution_id, cb) {
 
 var addSolution = function(task_id,user_id,program_language_id,code, cb) {
     var createdate = new Date();
+    createdate = "2015-10-30 18:32:23";
     var points = 100;
-    connection.query("INSERT INTO solutions VALUES (null," + task_id.toString() + 
-			"," + user_id.toString() + ",'" + createdate.toString() + "'," + 
-			program_language_id.toString() + "," + "200" +
-			",'WAIT', " + points.toString()+ ")", function(error, solution_id) {
-       	cb(error, solution_id);
-    });
+    connection.query("INSERT INTO solutions VALUES (null," + task_id.toString() +
+ 			"," + user_id.toString() + ",'" + createdate.toString() + "'," +
+ 			program_language_id.toString() + "," + "200" +
+ 			",'WAIT', " + points.toString()+ ")", function(error, solution_id) {
+        if (error) throw error;
+          cb(error, solution_id);
+     });
 };
 
 var sql1 = "SET CHARACTER SET utf8";
@@ -181,3 +194,4 @@ exports.getTestByTaskID = getTestByTaskID;
 exports.getTop10Users = getTop10Users;
 exports.getObjects = getObjects;
 exports.addSolution = addSolution;
+exports.getSolutionsByTaskID = getSolutionsByTaskID;

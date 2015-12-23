@@ -3,6 +3,7 @@ node_modules
 *.alex
 database_local
 tmp
-config
+//config
 .idea
 task
+tasks

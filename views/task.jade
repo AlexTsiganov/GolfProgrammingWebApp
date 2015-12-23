@@ -37,6 +37,21 @@ block content
     textarea.form-control(id='code' placeholder="Ваш код ..."  rows='10')
 
     button.btn.btn-primary(style='margin-top:20px; margin-bottom:20px; box-shadow: 1px 2px 5px #000000;' id='send') Отправить решение
+    - if (solutions)
+        table.table.table-striped.table-hover
+         thead: tr
+           th №
+           th Код
+           th Балы
+           th Автор
+         tbody
+           each solution,i in solutions
+             tr
+              td #{i+1}
+              td #{solution.code}
+              td #{solution.points}
+              td #{username}
+
 
     .modal.fade(id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
       .modal-dialog.wide-modal
