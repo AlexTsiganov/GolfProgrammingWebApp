@@ -20,7 +20,8 @@ router.get('/:id', function(req, res, next)
         res.render('task', {
             task: task,
             langs: langs,
-            tests: test
+            tests: test,
+            username: req.session.username
         });
     });
 });

@@ -22,8 +22,14 @@ html
           li: a(href='#') Контакты
         //button.btn.btn-primary.navbar-btn(type="button") Press Alex Tsiganov
         ul(class='nav navbar-nav navbar-right')
-          li: a(href='/login')
-              span.glyphicon.glyphicon-log-in
-              |   Войти
+           - if (username)
+              li: a(href='/logout')
+                  span.glyphicon.glyphicon-log-in
+                  |   #{username} (Выйти)
+           - else
+              li: a(href='/login')
+                  span.glyphicon.glyphicon-log-in
+                  |   Войти
+
 
   block content
