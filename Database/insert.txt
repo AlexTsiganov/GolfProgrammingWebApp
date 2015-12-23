@@ -24,19 +24,19 @@ INSERT INTO program_languages VALUES
 (8,'#Bash','','','','','','','');
 
 INSERT INTO users VALUES
-(1,'1234','mail@mail.ru','Petr_Ivan','Petrov','Ivan','89119876543','2015-9-20','2015-10-21','',null);
+(1, 'Petrov', '', '');
 
 INSERT INTO users VALUES
-(2,'654321','my_mail@mgail.com','Cat123','Sidorova','Elena','89319873456','2015-9-25','2015-10-22','',null);
+(2, 'Cat123', '', '');
 
 INSERT INTO users VALUES
-(3,'987654','Ivanov_Ojeg@yandex.ru','Olegg','Ivanov','Oleg','89055673489','2015-9-26','2015-10-22','',null);
+(3, 'Olegg', '', '');
 
 INSERT INTO users VALUES
-(4,'76543','e-mail@rambler.ru','Alex337','Sedov','Alexey','89115674321','2015-9-21','2015-10-23','',null);
+(4, 'Alex337', '', '');
 
 INSERT INTO users VALUES
-(5,'root','adminpg-mail@rambler.ru','Admin','Admin','Admin','89110000001','2015-9-1','2015-11-23','',null);
+(5, 'Admin', '', '');
 
 INSERT INTO tasks VALUES
 (1,'The task of adding two numbers','You must write a program that adds two numbers.','2015-9-20',30,5);

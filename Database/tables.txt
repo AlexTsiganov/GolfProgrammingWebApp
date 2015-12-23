@@ -1,16 +1,9 @@
 CREATE TABLE IF NOT EXISTS users
 (
 id int NOT NULL AUTO_INCREMENT primary key,
-password varchar(25),
-email varchar(35) unique,
 nickname varchar (25) unique,
-secondname varchar(20),
-firstname varchar(20),
-phone varchar (11) unique,
-registration_date date,
-last_visit date,
-hashed_password varchar(100),
-salt float
+hashed_password varchar(250),
+salt varchar(250)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS tasks
