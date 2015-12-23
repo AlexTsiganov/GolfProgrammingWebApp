@@ -146,7 +146,28 @@ connection.query(sql1, function (err, result) {
 });
 
 //--- Functions related to User table ---
+var HttpError = require('../libs/errors/HttpError');
 
+var writeUser = function(name, salt, hashed_pass, callback) {
+    if (!name || !salt || !hashed_pass) {
+        log.debug('something wrong with user data');
+        callback(new HttpError(404, "Can't add user"));
+        return;
+    }
+
+    connection.query("INSERT INTO users (nickname, salt, hashed_password) VALUES ('"
+        + name + "', '" + salt + "', '" +  hashed_pass + "');",
+        function(err) {
+            if (err) {
+                callback(new HttpError(403, "login is busy"));
+            } else {
+                callback();
+            }
+    });
+};
+
+
+exports.writeUser = writeUser;
 //---------------------------------------
 
 exports.getAllTasks = getAllTasks;
