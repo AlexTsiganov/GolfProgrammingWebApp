@@ -6,7 +6,7 @@ router.get('/', function(req, res, next) {
    dataManager.getTop10Users(function(toplist, error)
    {
       res.render('toplist', { title: 'Top users',
-         toplist: toplist});
+         toplist: toplist, username: req.session.username});
    });
 });
 
