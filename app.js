@@ -89,6 +89,9 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
+
+    log.warn('Error happened, msg - ' + err.message + ". Status - " + err.status);
+
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -100,6 +103,9 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+
+  log.warn('Error happened, msg - ' + err.message + ". Status - " + err.status);
+
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

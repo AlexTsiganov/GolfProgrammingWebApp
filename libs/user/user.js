@@ -6,7 +6,7 @@ var addNewUser = function(name, plainPass, callback) {
     var salt = Math.random() + '';
     var hashedPassword = crypto.createHmac('sha1', salt).update(plainPass).digest('hex');
 
-    log.debug('salt: ' + salt + " hash_pass: " + hashedPassword);
+    //log.debug('salt: ' + salt + " hash_pass: " + hashedPassword);
 
     dataManager.writeUser(name, salt, hashedPassword, callback);
 

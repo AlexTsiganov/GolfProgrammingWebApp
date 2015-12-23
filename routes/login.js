@@ -14,23 +14,23 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next){
    var username = req.body.username;
    var password = req.body.password;
-   log.info(" The user: <" + username + "> with password: <" + password + "> logged in.");
-   user.addNewUser(username, password, function(err, result) {
-      if (err instanceof HttpError)  {
-         if (err instanceof HttpError) {
 
-         }
+   log.info(" The user: <" + username + "> with password: <" + password + "> trying to login.");
+
+
+
+   user.addNewUser(username, password, function(err, result) {
+      if (err)  {
+
          log.warn('Error happened, msg - ' + err.message + ". Status - " + err.status);
-         /*res.render('error', {
-            message: err.message,
-            error: err
-         });
-         res.end();*/
-         next(err);
+
+         res.status(err.status);
+         res.send({message: err.message});
+
+      } else {
+         log.info('User: ' + username + " was add into DB.");
+         res.end();
       }
-      log.info('User: ' + username + " was add into DB.");
-      log.info('His hashed pass: ' + password + " .");
-      res.end();
    });
 
 });
